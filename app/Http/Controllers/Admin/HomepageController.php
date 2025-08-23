@@ -8,4 +8,8 @@ use Illuminate\Http\Request;
 class HomepageController extends Controller
 {
     //
+    public function logo()
+    {
+        return "hello";
+    }
 }

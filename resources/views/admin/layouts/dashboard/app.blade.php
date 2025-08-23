@@ -905,7 +905,7 @@
                             <span class="nav-text">Home Page</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ route('logo') }}">Logo</a></li>
+                            <li><a href="{{ route('admin.logo') }}">Logo</a></li>
 
                         </ul>
                     </li>

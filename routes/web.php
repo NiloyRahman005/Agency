@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
 
 // ADMIN ROUTES
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/logo', [\App\Http\Controllers\Admin\Backend_controller::class, 'logo'])->name('logo');
+    Route::get('/logo', [\App\Http\Controllers\Admin\HomePageController::class, 'logo'])->name('logo');
   });
 
 
