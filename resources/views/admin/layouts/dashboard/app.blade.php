@@ -48,6 +48,7 @@
         rel="stylesheet" type="text/css" />
 
     <link href="{{ asset('admin/public/assets/css/style.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/public/assets/vendor/toastr/css/toastr.min.css') }}" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -76,11 +77,16 @@
         <!--**********************************
     Nav header start
 ***********************************-->
+        @php
+            $Logo = App\Models\Logo::first();
+            $defaultImage = asset('assets/images/no-img-avatar.png');
+            $logoPath =
+            $Logo && $Logo->logo && file_exists(public_path($Logo->logo)) ? asset($Logo->logo) : $defaultImage; @endphp
         <div class="nav-header">
             <a href="index.html" class="brand-logo" aria-label="Gymove">
-                <img class="logo-abbr" src="public/assets/images/logo.png" alt="">
-                <img class="logo-compact" src="public/assets/images/logo-text.png" alt="">
-                <img class="brand-title" src="public/assets/images/logo-text.png" alt="">
+                {{-- <img class="logo-abbr" src="public/assets/images/logo.png" alt=""> --}}
+                {{-- <img class="logo-compact" src="public/assets/images/logo-text.png" alt=""> --}}
+                <img class="brand-title" src="{{ $logoPath }}" alt="">
             </a>
 
             <div class="nav-control">
@@ -906,7 +912,9 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('admin.logo') }}">Logo</a></li>
-
+                            <li><a href="{{ route('admin.sectionTitle') }}">Top Section Title</a></li>
+                            <li><a href="{{ route('admin.Video') }}">Video</a></li>
+                            <li><a href="{{ route('admin.content') }}">Content</a></li>
                         </ul>
                     </li>
 
@@ -940,6 +948,43 @@
 ***********************************-->
 
     </div>
+    @if (session('success'))
+        <div id="toast-container" class="toast-top-right">
+            <div class="toast toast-info" aria-live="polite" style="display: block;">
+                <div class="toast-progress" style="width: 100%; animation: progressBar 5s linear;"></div>
+                <button type="button" class="toast-close-button" role="button"
+                    onclick="this.parentElement.style.display='none'">×</button>
+                <div class="toast-title">Success</div>
+                <div class="toast-message">{{ session('success') }}</div>
+            </div>
+        </div>
+
+        <style>
+            @keyframes progressBar {
+                from {
+                    width: 100%;
+                }
+
+                to {
+                    width: 0%;
+                }
+            }
+
+            .toast-progress {
+                height: 5px;
+                background-color: #31708f;
+                animation-fill-mode: forwards;
+            }
+        </style>
+
+        <script>
+            // Auto-hide the toast after 5 seconds
+            setTimeout(() => {
+                const toast = document.querySelector('#toast-container .toast');
+                if (toast) toast.style.display = 'none';
+            }, 5000);
+        </script>
+    @endif
     <script src="{{ asset('admin/public/assets/vendor/global/global.min.js') }}"></script>
     <script src="{{ asset('admin/public/assets/vendor/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
 
@@ -952,6 +997,9 @@
 
     <script src="{{ asset('admin/public/assets/js/custom.min.js') }}"></script>
     <script src="{{ asset('admin/public/assets/js/deznav-init.js') }}"></script>
+    <script src="{{ asset('admin/public/assets/vendor/toastr/js/toastr.min.js') }}"></script>
+    <script src="{{ asset('admin/public/assets/js/plugins-init/toastr-init.js') }}"></script>
+
     @stack('script')
     <script>
         function carouselReview() {
