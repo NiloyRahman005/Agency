@@ -36,6 +36,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/content',[\App\Http\Controllers\Admin\HomePageController::class,'content'])->name('content');
     Route::post('/contentPost',[\App\Http\Controllers\Admin\HomePageController::class,'contentPost'])->name('contentPost');
 
+    //Banner
+    Route::get('/banner',[\App\Http\Controllers\Admin\HomePageController::class,'banner'])->name('banner');
+    Route::post('/bannerPost',[\App\Http\Controllers\Admin\HomePageController::class,'bannerPost'])->name('bannerPost');
+
+
+    //Second Section 
+    Route::get('/secondSectionCards',[\App\Http\Controllers\Admin\HomePageController::class,'secondSectionCards'])->name('secondSectionCards');
+    Route::post('/secondSectionCardsInsert',[\App\Http\Controllers\Admin\HomePageController::class,'secondSectionCardsInsert'])->name('secondSectionCardsInsert');
+    Route::post('/sectondSecUpdate',[\App\Http\Controllers\Admin\HomePageController::class,'sectondSecUpdate'])->name('sectondSecUpdate');
+    Route::get('/sectondSecdelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'sectondSecdelete'])->name('sectondSecdelete');
+
+
+
+    
+
+
+    
+
 
 
 

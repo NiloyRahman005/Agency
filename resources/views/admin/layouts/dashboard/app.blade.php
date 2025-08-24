@@ -915,6 +915,18 @@
                             <li><a href="{{ route('admin.sectionTitle') }}">Top Section Title</a></li>
                             <li><a href="{{ route('admin.Video') }}">Video</a></li>
                             <li><a href="{{ route('admin.content') }}">Content</a></li>
+                            <li><a href="{{ route('admin.banner') }}">Banner</a></li>
+
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Second Section</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.secondSectionCards') }}">Second Sections Cards</a></li>
+
+
                         </ul>
                     </li>
 

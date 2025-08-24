@@ -288,7 +288,7 @@
 
 
                 <!-- Brand area start -->
-                <section class="brand__area">
+                {{-- <section class="brand__area">
                     <div class="container pt-140 pb-140">
                         <div class="row">
                             <div class="col-xxl-12">
@@ -317,7 +317,7 @@
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> --}}
                 <!-- Brand area end -->
 
 
