@@ -48,6 +48,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/sectondSecdelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'sectondSecdelete'])->name('sectondSecdelete');
 
 
+    //Forth Section
+    Route::get('/ourServices',[\App\Http\Controllers\Admin\HomePageController::class,'ourServices'])->name('ourServices');
+    Route::post('/postContent',[\App\Http\Controllers\Admin\HomePageController::class,'postContent'])->name('postContent');
+    Route::post('/postContentUpdate',[\App\Http\Controllers\Admin\HomePageController::class,'postContentUpdate'])->name('postContentUpdate');
+    Route::get('/postContentdelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'postContentdelete'])->name('postContentdelete');
+   
+    //Brand
+    Route::get('/brands',[\App\Http\Controllers\Admin\HomePageController::class,'brands'])->name('brands');
+
+    
+
+
 
     
 

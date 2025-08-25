@@ -49,6 +49,9 @@
 
     <link href="{{ asset('admin/public/assets/css/style.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/public/assets/vendor/toastr/css/toastr.min.css') }}" rel="stylesheet" type="text/css">
+    @stack('link')
+
+
 
 </head>
 
@@ -56,8 +59,8 @@
     @stack('style')
 
     <!--*******************
-        Preloader start
-    ********************-->
+            Preloader start
+        ********************-->
     <div id="preloader">
         <div class="sk-three-bounce">
             <div class="sk-child sk-bounce1"></div>
@@ -66,17 +69,17 @@
         </div>
     </div>
     <!--*******************
-        Preloader end
-    ********************-->
+            Preloader end
+        ********************-->
 
     <!--**********************************
-        Main wrapper start
-    ***********************************-->
+            Main wrapper start
+        ***********************************-->
     <div id="main-wrapper">
 
         <!--**********************************
-    Nav header start
-***********************************-->
+        Nav header start
+    ***********************************-->
         @php
             $Logo = App\Models\Logo::first();
             $defaultImage = asset('assets/images/no-img-avatar.png');
@@ -96,10 +99,10 @@
             </div>
         </div>
         <!--**********************************
-    Nav header end
-***********************************--> <!--**********************************
- Chat box start
-***********************************-->
+        Nav header end
+    ***********************************--> <!--**********************************
+     Chat box start
+    ***********************************-->
         {{-- <div class="chatbox">
             <div class="chatbox-close"></div>
             <div class="custom-tab-1">
@@ -723,10 +726,10 @@
             </div>
         </div> --}}
         <!--**********************************
- Chat box End
-***********************************--> <!--**********************************
- Header start
-***********************************-->
+     Chat box End
+    ***********************************--> <!--**********************************
+     Header start
+    ***********************************-->
         <header class="header">
             <div class="header-content">
                 <nav class="navbar navbar-expand">
@@ -891,10 +894,10 @@
             </div>
         </header>
         <!--**********************************
- Header end
-***********************************--> <!--**********************************
-    Sidebar start
-***********************************-->
+     Header end
+    ***********************************--> <!--**********************************
+        Sidebar start
+    ***********************************-->
         <div class="deznav">
             <div class="deznav-scroll">
                 <ul class="metismenu" id="menu">
@@ -930,13 +933,25 @@
                         </ul>
                     </li>
 
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Forth Section</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.ourServices') }}">Our Services</a></li>
+                            <li><a href="{{ route('admin.brands') }}">Brands</a></li>
+
+
+                        </ul>
+                    </li>
+
             </div>
         </div>
         <!--**********************************
-    Sidebar end
-***********************************--> <!--**********************************
- Content body start
-***********************************-->
+        Sidebar end
+    ***********************************--> <!--**********************************
+     Content body start
+    ***********************************-->
         <div class="content-body default-height">
             <!-- row -->
 
@@ -944,11 +959,11 @@
 
         </div>
         <!--**********************************
- Content body end
-***********************************-->
+     Content body end
+    ***********************************-->
         <!--**********************************
-    Footer start
-***********************************-->
+        Footer start
+    ***********************************-->
         <footer class="footer">
             {{-- <div class="copyright">
                 <p>Copyright © Designed &amp; Developed by <a href="http://dexignzone.com/"
@@ -956,8 +971,8 @@
             </div> --}}
         </footer>
         <!--**********************************
-    Footer end
-***********************************-->
+        Footer end
+    ***********************************-->
 
     </div>
     @if (session('success'))
@@ -1012,6 +1027,7 @@
     <script src="{{ asset('admin/public/assets/vendor/toastr/js/toastr.min.js') }}"></script>
     <script src="{{ asset('admin/public/assets/js/plugins-init/toastr-init.js') }}"></script>
 
+
     @stack('script')
     <script>
         function carouselReview() {
@@ -1058,8 +1074,8 @@
 
 
     <!--**********************************
-    Main wrapper end
-***********************************-->
+        Main wrapper end
+    ***********************************-->
 </body>
 
 

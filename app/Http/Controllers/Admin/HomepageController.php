@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Content;
 use App\Models\Logo;
+use App\Models\OurServices;
 use App\Models\SeconSectionCards;
 use App\Models\SectionSubTitle;
 use App\Models\SectionTitle;
@@ -274,5 +275,38 @@ class HomepageController extends Controller
         SeconSectionCards::findOrFail($id)->delete();
         return back()->with('success',"Successfully Deleted");
        
+    }
+    public function ourServices()
+    {
+        $ourServices = OurServices::all();
+        return view('admin.layouts.dashboard.forthSection.index',compact('ourServices'));
+    }
+    public function postContent(Request $request)
+    {
+       
+        $request->validate([
+            'title'=>'required',
+            'content'=>'required'
+        ]);
+       OurServices::create($request->all());
+        return back()->with('success',"Successfully Created");
+    }
+    public function postContentUpdate(Request $request)
+    {
+         $request->validate([
+         'title'=>'required',
+         'content'=>'required'
+         ]);
+        OurServices::find($request->id)->update($request->all());
+        return back()->with('success',"Successfully Updated");
+    }
+    public function postContentdelete($id)
+    {
+        OurServices::find($id)->delete();
+        return back()->with('success',"Successfully Deleted");
+    }
+    public function brands(){
+        return view('admin.layouts.dashboard.forthSection.brand');
+
     }
 }
