@@ -8,20 +8,20 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-header bg-primary">
-                        <h3 class="text-light">Content Section</h3>
+                        <h3 class="text-light">Brand Section</h3>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.postContent') }}" method="POST">
+                        <form action="{{ route('admin.brandPost') }}" method="POST">
                             @csrf
-                            @error('title')
+                            @error('brand_name')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                             {{-- Title Field --}}
                             <div class="mb-3">
                                 {{-- {{ $content }} --}}
-                                <label class="form-label">Title</label>
+                                <label class="form-label">Brand</label>
                                 <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                    name="brand_name" value="{{ old('title', $content->title ?? '') }}">
+                                    name="brand_name">
 
                                 @error('title')
                                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -41,29 +41,24 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="row">
-            @forelse($ourServices as $contentsWithTitle)
-                <div class="col-6 mb-3"> <!-- 3 cards per row -->
+        <div class="row">
+            @forelse($brands as $brand)
+                <div class="col-3 mb-3"> <!-- 3 cards per row -->
                     <div class="card h-100">
-                        <form action="{{ route('admin.postContentUpdate') }}" method="POST">
+                        <form action="{{ route('admin.brandEdit') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="id" value="{{ $contentsWithTitle->id }}">
+                            <input type="hidden" name="id" value="{{ $brand->id }}">
 
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label class="form-label">Title</label>
-                                    <input type="text" class="form-control" name="title"
-                                        value="{{ $contentsWithTitle->title }}">
+                                    <label class="form-label">Brand Name</label>
+                                    <input type="text" class="form-control" name="brand_name"
+                                        value="{{ $brand->brand_name }}">
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Content</label>
-                                    <textarea class="summernote form-control" name="content">
-                                {!! $contentsWithTitle->content !!}
-                            </textarea>
-                                </div>
+
                                 <div class="mb-3">
                                     <button type="submit" class="btn btn-sm btn-primary">Edit</button>
-                                    <a href="{{ route('admin.postContentdelete', $contentsWithTitle->id) }}"
+                                    <a href="{{ route('admin.brandDelete', $brand->id) }}"
                                         class="btn btn-sm btn-danger">Delete</a>
                                 </div>
                             </div>
@@ -73,7 +68,7 @@
             @empty
                 <p>No services found</p>
             @endforelse
-        </div> --}}
+        </div>
 
     </div>
     </div>
@@ -99,5 +94,6 @@
                 });
             });
         </script>
+        
     @endpush
 @endsection

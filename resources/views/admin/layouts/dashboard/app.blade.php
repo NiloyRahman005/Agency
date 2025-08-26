@@ -945,6 +945,15 @@
                         </ul>
                     </li>
 
+                    {{-- <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Services</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.ourService') }}">Our Services</a></li>
+                        </ul>
+                    </li> --}}
+
             </div>
         </div>
         <!--**********************************

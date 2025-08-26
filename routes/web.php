@@ -53,9 +53,25 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::post('/postContent',[\App\Http\Controllers\Admin\HomePageController::class,'postContent'])->name('postContent');
     Route::post('/postContentUpdate',[\App\Http\Controllers\Admin\HomePageController::class,'postContentUpdate'])->name('postContentUpdate');
     Route::get('/postContentdelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'postContentdelete'])->name('postContentdelete');
+    Route::get('/serviceContentAdd/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'serviceContentAdd'])->name('serviceContentAdd');
+    Route::post('/serviceBasedFeaturePost',[\App\Http\Controllers\Admin\HomePageController::class,'serviceBasedFeaturePost'])->name('serviceBasedFeaturePost');
+     Route::post('/featuresEdit',[\App\Http\Controllers\Admin\HomePageController::class,'featuresEdit'])->name('featuresEdit');
+     Route::get('/featuresDelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'featuresDelete'])->name('featuresDelete');
+
+     
+    
+    
+
+   
    
     //Brand
     Route::get('/brands',[\App\Http\Controllers\Admin\HomePageController::class,'brands'])->name('brands');
+    Route::post('/brandPost',[\App\Http\Controllers\Admin\HomePageController::class,'brandPost'])->name('brandPost');
+    Route::post('/brandEdit',[\App\Http\Controllers\Admin\HomePageController::class,'brandEdit'])->name('brandEdit');
+    Route::get('/brandDelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'brandDelete'])->name('brandDelete');
+
+    //ourService
+
 
     
 

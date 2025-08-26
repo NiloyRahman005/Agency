@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\Brand;
 use App\Models\Content;
+use App\Models\FeaturesOfServices;
 use App\Models\Logo;
 use App\Models\OurServices;
 use App\Models\SeconSectionCards;
@@ -13,6 +15,7 @@ use App\Models\SectionTitle;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class HomepageController extends Controller
 {
@@ -195,13 +198,13 @@ class HomepageController extends Controller
     public function banner()
     {
         $banner = Banner::first();
-        return view('admin.layouts.dashboard.homepage.banner',compact('banner'));
+        return view('admin.layouts.dashboard.homepage.banner', compact('banner'));
     }
     public function bannerPost(Request $request)
     {
         // Validate the form
         $request->validate([
-        'banner' => 'required|image|mimes:jpg,jpeg,png,webp|',
+            'banner' => 'required|image|mimes:jpg,jpeg,png,webp|',
         ]);
 
         // Define the folder path
@@ -209,104 +212,225 @@ class HomepageController extends Controller
 
         // Create folder if not exists
         if (!File::exists($folderPath)) {
-        File::makeDirectory($folderPath, 0755, true);
+            File::makeDirectory($folderPath, 0755, true);
         }
 
         // Handle the uploaded image
         if ($request->hasFile('banner')) {
-        $image = $request->file('banner');
-        $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-        $image->move($folderPath, $imageName);
-        $imagePath = 'banner/' . $imageName;
+            $image = $request->file('banner');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move($folderPath, $imageName);
+            $imagePath = 'banner/' . $imageName;
 
-        // Check if a logo already exists (assuming only one row in Logo table)
-        $existingBanner = Banner::first();
+            // Check if a logo already exists (assuming only one row in Logo table)
+            $existingBanner = Banner::first();
 
-        if ($existingBanner) {
-        // Delete old logo file if exists
-        $oldImagePath = public_path($existingBanner->banner);
-        if (File::exists($oldImagePath)) {
-        File::delete($oldImagePath);
-        }
+            if ($existingBanner) {
+                // Delete old logo file if exists
+                $oldImagePath = public_path($existingBanner->banner);
+                if (File::exists($oldImagePath)) {
+                    File::delete($oldImagePath);
+                }
 
-        // Update existing logo record
-        $existingBanner->update([
-        'banner' => $imagePath,
-        ]);
-        } else {
-        // Create new logo record
-        Banner::create([
-        'banner' => $imagePath,
-        ]);
-        }
+                // Update existing logo record
+                $existingBanner->update([
+                    'banner' => $imagePath,
+                ]);
+            } else {
+                // Create new logo record
+                Banner::create([
+                    'banner' => $imagePath,
+                ]);
+            }
         }
 
         return redirect()->back()->with('success', 'Banner saved successfully!');
     }
     public function secondSectionCards()
     {
-       $secondSection =  SeconSectionCards::all();
-       return view('admin.layouts.dashboard.SecondSection.index',compact('secondSection'));
-
+        $secondSection =  SeconSectionCards::all();
+        return view('admin.layouts.dashboard.SecondSection.index', compact('secondSection'));
     }
     public function secondSectionCardsInsert(Request $request)
     {
         $request->validate([
-            'title'=>'required',
-            'content'=>'required'
+            'title' => 'required',
+            'content' => 'required'
         ]);
         SeconSectionCards::create([
-            'title'=>$request->title,
-            'content'=>$request->content
+            'title' => $request->title,
+            'content' => $request->content
         ]);
-        return back()->with('success',"Successfully Created");
+        return back()->with('success', "Successfully Created");
     }
-    public function sectondSecUpdate(Request $request){
+    public function sectondSecUpdate(Request $request)
+    {
+        // return $request->all();
         $request->validate([
-        'title'=>'required',
-        'content'=>'required'
+            'title' => 'required',
+            'content' => 'required'
         ]);
-        SeconSectionCards::find($request->id)->update([$request->all()]);
-        return back()->with('success',"Successfully Updated");
-      
+        SeconSectionCards::find($request->id)->update($request->all());
+        return back()->with('success', "Successfully Updated");
     }
     public function sectondSecdelete($id)
     {
         SeconSectionCards::findOrFail($id)->delete();
-        return back()->with('success',"Successfully Deleted");
-       
+        return back()->with('success', "Successfully Deleted");
     }
     public function ourServices()
     {
         $ourServices = OurServices::all();
-        return view('admin.layouts.dashboard.forthSection.index',compact('ourServices'));
+        return view('admin.layouts.dashboard.forthSection.index', compact('ourServices'));
     }
     public function postContent(Request $request)
     {
-       
+        // Validate the form
         $request->validate([
-            'title'=>'required',
-            'content'=>'required'
+            'title' => 'required',
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|',
         ]);
-       OurServices::create($request->all());
-        return back()->with('success',"Successfully Created");
+
+        // Define the folder path
+        $folderPath = public_path('service');
+
+        // Create folder if not exists
+        if (!File::exists($folderPath)) {
+            File::makeDirectory($folderPath, 0755, true);
+        }
+        // Handle the uploaded image
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move($folderPath, $imageName);
+            $imagePath = 'image/' . $imageName;
+            OurServices::create([
+                'title' => $request->title,
+                'image' => $imagePath,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Successfully created service !');
     }
     public function postContentUpdate(Request $request)
     {
-         $request->validate([
-         'title'=>'required',
-         'content'=>'required'
-         ]);
-        OurServices::find($request->id)->update($request->all());
-        return back()->with('success',"Successfully Updated");
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+
+        $ourServices = OurServices::findOrFail($request->id);
+        $ourServices->title = $request->title;
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($ourServices->image && file_exists(public_path('service/' . $ourServices->image))) {
+                unlink(public_path('service/' . $ourServices->image));
+            }
+
+            // Store new image
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('service/'), $imageName);
+
+            $ourServices->image = $imageName;
+        }
+
+        $ourServices->save();
+
+        return redirect()->back()->with('success', 'Services updated successfully!');
     }
     public function postContentdelete($id)
     {
         OurServices::find($id)->delete();
-        return back()->with('success',"Successfully Deleted");
+        return back()->with('success', "Successfully Deleted");
     }
-    public function brands(){
-        return view('admin.layouts.dashboard.forthSection.brand');
+     public function serviceContentAdd($id)
+     {
+        $ourServices = OurServices::findOrFail($id);
+        $FeaturesOfServices = FeaturesOfServices::where('service_id',$id)->get();
+        return view('admin.layouts.dashboard.forthSection.content_add_page',
+        compact('ourServices','FeaturesOfServices'));
 
+     }
+    public function serviceBasedFeaturePost(Request $request)
+    {
+    // Validate request (optional but recommended)
+    $request->validate([
+    'service_id' => 'required|integer|exists:our_services,id',
+    'sections' => 'required|array',
+    'sections.*.title' => 'required|string|max:255',
+    'sections.*.content' => 'required|string',
+    ]);
+
+    $serviceId = $request->service_id;
+
+    foreach ($request->sections as $section) {
+    FeaturesOfServices::create([
+    'service_id' => $serviceId,
+    'title' => $section['title'],
+    'content' => $section['content'],
+    ]);
     }
+
+    return back()->with('success',"Successfully Created");
+    }
+   public function featuresEdit(Request $request)
+   {
+   $id = $request->id;
+   $bagName = "feature_$id";
+
+   // Create a new Validator instance
+   $validator = Validator::make($request->all(), [
+   'title' => 'required',
+   'content' => 'required',
+   ]);
+
+   // Check if validation fails
+   if ($validator->fails()) {
+   // Redirect back with errors and the input, using a named error bag
+   return back()->withErrors($validator, $bagName)->withInput();
+   }
+
+   // If validation passes, update the record
+   FeaturesOfServices::find($id)->update($request->only('title', 'content'));
+
+   return back()->with('success', "Successfully Updated");
+   }
+   public function featuresDelete($id)
+   {
+    FeaturesOfServices::findOrFail($id)->delete();
+    return back()->with('success', "Successfully Deleted");
+   }
+    public function brands()
+    {
+        $brands = Brand::all();
+        return view('admin.layouts.dashboard.forthSection.brand', compact('brands'));
+    }
+    public function brandPost(Request $request)
+    {
+        $request->validate([
+            'brand_name' => 'required'
+        ]);
+        Brand::create($request->all());
+        return back()->with('success', "Successfully Created");
+    }
+    public function brandEdit(Request $request)
+    {
+        $request->validate([
+            'brand_name' => 'required'
+        ]);
+        Brand::find($request->id)->update($request->all());
+        return back()->with('success', "Successfully Created");
+    }
+    public function brandDelete($id)
+    {
+        Brand::findOrFail($id)->delete();
+        return back()->with('success', "Successfully Deleted");
+    }
+    public function ourService()
+    {
+        return view('admin.layouts.dashboard.Service.index');
+    }
+   
 }
