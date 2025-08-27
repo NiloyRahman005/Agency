@@ -49,6 +49,7 @@
 
     <link href="{{ asset('admin/public/assets/css/style.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/public/assets/vendor/toastr/css/toastr.min.css') }}" rel="stylesheet" type="text/css">
+
     @stack('link')
 
 
@@ -940,6 +941,30 @@
                         <ul aria-expanded="false">
                             <li><a href="{{ route('admin.ourServices') }}">Our Services</a></li>
                             <li><a href="{{ route('admin.brands') }}">Brands</a></li>
+
+
+                        </ul>
+                    </li>
+
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">The Task Story</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.taskStory') }}">Task Story</a></li>
+
+
+
+                        </ul>
+                    </li>
+
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Blog Section</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.blog') }}">Blog</a></li>
+
 
 
                         </ul>

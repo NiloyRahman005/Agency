@@ -58,6 +58,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
      Route::post('/featuresEdit',[\App\Http\Controllers\Admin\HomePageController::class,'featuresEdit'])->name('featuresEdit');
      Route::get('/featuresDelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'featuresDelete'])->name('featuresDelete');
 
+    Route::get('/taskStory',[\App\Http\Controllers\Admin\HomePageController::class,'taskStory'])->name('taskStory');
+    Route::post('/taskStoryPost',[\App\Http\Controllers\Admin\HomePageController::class,'taskStoryPost'])->name('taskStoryPost');
+
+
+     
+
      
     
     
@@ -74,7 +80,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
 
     
+    //Blog
+    Route::get('/blog',[\App\Http\Controllers\Admin\HomePageController::class,'blog'])->name('blog');
+    Route::post('/postBlog',[\App\Http\Controllers\Admin\HomePageController::class,'postBlog'])->name('postBlog');
 
+
+    
 
 
     

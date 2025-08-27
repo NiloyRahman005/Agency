@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Content;
 use App\Models\FeaturesOfServices;
@@ -12,6 +13,7 @@ use App\Models\OurServices;
 use App\Models\SeconSectionCards;
 use App\Models\SectionSubTitle;
 use App\Models\SectionTitle;
+use App\Models\TaskStory;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -432,5 +434,93 @@ class HomepageController extends Controller
     {
         return view('admin.layouts.dashboard.Service.index');
     }
+   public function taskStory()
+   {
+   $taskStory = TaskStory::first(); // only one row
+   return view('admin.layouts.dashboard.task-story.index', compact('taskStory'));
+   }
+    public function taskStoryPost(Request $request)
+    {
+        $request->validate([
+            'designation' => 'required',
+            'content' => 'required',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+        ]);
+
+        // Find first record, or create a new instance
+        $taskStory = TaskStory::first() ?? new TaskStory();
+
+        $taskStory->designation = $request->designation;
+        $taskStory->content = $request->content;
+
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($taskStory->image && file_exists(public_path($taskStory->image))) {
+                unlink(public_path($taskStory->image));
+            }
+
+            // Store new image
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imagePath = 'taskStory/' . $imageName; // relative path
+            $image->move(public_path('taskStory/'), $imageName);
+
+            // Save full path (relative to public/)
+            $taskStory->image = $imagePath;
+        }
+
+        $taskStory->save();
+
+        return redirect()->back()->with('success', 'Task story saved successfully!');
+    }
+    public function blog()
+    {
+       
+        return view('admin.layouts.dashboard.Blog.index');
+
+    }
+public function postBlog(Request $request)
+{
+// 1. Validate the request
+$request->validate([
+'title' => 'required|string|max:255',
+'content' => 'required|string',
+'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+'meta_title' => 'nullable|string|max:255',
+'meta_description' => 'nullable|string|max:500',
+'meta_keywords' => 'nullable|string',
+]);
+
+// 2. Handle image upload
+$imagePath = null;
+if ($request->hasFile('image')) {
+$image = $request->file('image');
+$imageName = time() . '_' . \Str::slug($request->title) . '.' . $image->getClientOriginalExtension();
+$image->move(public_path('blogs'), $imageName);
+$imagePath = 'blogs/' . $imageName;
+}
+
+// 3. Generate a unique slug
+$slug = \Str::slug($request->title);
+$count = Blog::where('slug', 'LIKE', "$slug%")->count();
+if ($count > 0) {
+$slug = $slug . '-' . ($count + 1);
+}
+
+// 4. Save blog post to database
+$blog = new Blog();
+$blog->title = $request->title;
+$blog->slug = $slug; // Insert slug here
+$blog->content = $request->content;
+$blog->image = $imagePath;
+$blog->meta_title = $request->meta_title;
+$blog->meta_description = $request->meta_description;
+$blog->meta_keywords = $request->meta_keywords;
+$blog->save();
+
+// 5. Redirect back with success message
+return redirect()->back()->with('success', 'Blog post created successfully!');
+}
    
 }
