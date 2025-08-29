@@ -6,6 +6,15 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/',[FontendController::class,'index'])->name('index');
+Route::get('/ourServiceDetails/{name}',[FontendController::class,'ourServiceDetails'])->name('ourServiceDetails');
+Route::get('/Ta-ask-Story',[FontendController::class,'Ta_ask_Story'])->name('Ta-ask-Story');
+Route::get('/blog',[FontendController::class,'blog'])->name('blog');
+Route::get('/blog/details/{slug}',[FontendController::class,'blogDetails'])->name('blogDetails');
+
+
+
+
+
 
 Route::get('/dashboard', function () {
     // return view('dashboard');
@@ -83,9 +92,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     //Blog
     Route::get('/blog',[\App\Http\Controllers\Admin\HomePageController::class,'blog'])->name('blog');
     Route::post('/postBlog',[\App\Http\Controllers\Admin\HomePageController::class,'postBlog'])->name('postBlog');
+    Route::get('/blogList',[\App\Http\Controllers\Admin\HomePageController::class,'blogList'])->name('blogList');
 
 
+    //
+    // Route::get('/blogEdit/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'blogEdit'])->name('blogEdit');
+      Route::get('/blogsEdit/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'blogsEdit'])->name('blogsEdit');
     
+    Route::post('/blogEditPost',[\App\Http\Controllers\Admin\HomePageController::class,'blogEditPost'])->name('blogEditPost');
+
+
+   
 
 
     

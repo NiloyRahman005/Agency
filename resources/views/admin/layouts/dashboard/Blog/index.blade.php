@@ -41,17 +41,22 @@
             <div class="col-8 mx-auto">
                 <div class="card">
                     <div class="card-header bg-primary">
-                        <h3 class="text-light">Add Blog Post</h3>
+                        <h3 class="text-light">
+                            {{ isset($blog) ? 'Update Blog Post' : 'Add Blog Post' }}
+                        </h3>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.postBlog') }}" method="POST" enctype="multipart/form-data">
+                        <form action="" method="POST" enctype="multipart/form-data">
                             @csrf
+                            @if (isset($blog))
+                                @method('PUT')
+                            @endif
 
                             {{-- Blog Title --}}
                             <div class="mb-3">
                                 <label class="form-label">Title</label>
                                 <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                    name="title" value="{{ old('title') }}">
+                                    name="title" value="{{ old('title', $blog->title ?? '') }}">
                                 @error('title')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -60,7 +65,7 @@
                             {{-- Blog Content --}}
                             <div class="mb-3">
                                 <label class="form-label">Content</label>
-                                <textarea class="summernote" name="content">{{ old('content') }}</textarea>
+                                <textarea class="summernote" name="content">{{ old('content', $blog->content ?? '') }}</textarea>
                                 @error('content')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -71,7 +76,9 @@
                                 <label class="form-label">Featured / OG Image</label>
                                 <div class="position-relative">
                                     <div class="avatar-preview mb-2">
-                                        <div id="imagePreview" style="background-image: url('');"></div>
+                                        <div id="imagePreview"
+                                            style="background-image: url('{{ isset($blog->image) ? asset($blog->image) : '' }}');">
+                                        </div>
                                     </div>
                                     <div class="change-btn d-flex align-items-center flex-wrap">
                                         <input type="file" class="form-control d-none" id="imageUpload"
@@ -87,26 +94,29 @@
                             {{-- Meta Title --}}
                             <div class="mb-3">
                                 <label class="form-label">Meta Title</label>
-                                <input type="text" class="form-control" name="meta_title" value="{{ old('meta_title') }}"
+                                <input type="text" class="form-control" name="meta_title"
+                                    value="{{ old('meta_title', $blog->meta_title ?? '') }}"
                                     placeholder="Meta title for SEO & Facebook">
                             </div>
 
                             {{-- Meta Description --}}
                             <div class="mb-3">
                                 <label class="form-label">Meta Description</label>
-                                <textarea name="meta_description" class="form-control" rows="3" placeholder="Meta description for SEO & Facebook">{{ old('meta_description') }}</textarea>
+                                <textarea name="meta_description" class="form-control" rows="3" placeholder="Meta description for SEO & Facebook">{{ old('meta_description', $blog->meta_description ?? '') }}</textarea>
                             </div>
 
                             {{-- Meta Keywords as tags input --}}
                             <div class="mb-3">
                                 <label class="form-label">Meta Keywords</label>
                                 <input type="text" class="form-control" name="meta_keywords"
-                                    value="{{ old('meta_keywords') }}" data-role="tagsinput"
+                                    value="{{ old('meta_keywords', $blog->meta_keywords ?? '') }}" data-role="tagsinput"
                                     placeholder="Add keywords and press Enter">
                             </div>
 
                             <div class="mb-3">
-                                <button type="submit" class="btn btn-primary">Submit Blog</button>
+                                <button type="submit" class="btn btn-primary">
+                                    {{ isset($blog) ? 'Update Blog' : 'Submit Blog' }}
+                                </button>
                             </div>
 
                         </form>
@@ -117,9 +127,6 @@
     </div>
 
     @push('script')
-        <!-- jQuery (required for Summernote & Tags Input) -->
-        {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-
         <!-- Summernote JS -->
         <script src="{{ asset('admin/public/assets/vendor/summernote/js/summernote.min.js') }}"></script>
 
@@ -146,9 +153,6 @@
                 // Summernote init
                 $('.summernote').summernote({
                     height: 300,
-                    minHeight: null,
-                    maxHeight: null,
-                    focus: true,
                     placeholder: "Write your blog content here..."
                 });
             });

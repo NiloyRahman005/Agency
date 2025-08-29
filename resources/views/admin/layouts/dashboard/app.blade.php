@@ -964,6 +964,7 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('admin.blog') }}">Blog</a></li>
+                            <li><a href="{{ route('admin.blogList') }}">Blog List</a></li>
 
 
 

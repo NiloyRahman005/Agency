@@ -522,5 +522,69 @@ $blog->save();
 // 5. Redirect back with success message
 return redirect()->back()->with('success', 'Blog post created successfully!');
 }
+public function blogList()
+{   
+    $blog = Blog::all();
+    return view('admin.layouts.dashboard.Blog.list',compact('blog'));
+
+}
+public function blogsEdit($id)
+{
+    $blog = Blog::findOrFail($id);
+    
+    return view('admin.layouts.dashboard.Blog.edit',compact('blog'));
+    // return $id;
+}
+public function blogEditPost(Request $request)
+{
+    return $request->all();
+    //  // 1. Validate the request
+     $request->validate([
+     'title' => 'required|string|max:255',
+     'content' => 'required|string',
+     'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+     'meta_title' => 'nullable|string|max:255',
+     'meta_description' => 'nullable|string|max:500',
+     'meta_keywords' => 'nullable|string',
+     ]);
+
+     // 2. Find blog
+     $blog = Blog::findOrFail($request->id);
+
+     // 3. Handle image update
+     if ($request->hasFile('image')) {
+     // Delete old image if exists
+     if ($blog->image && File::exists(public_path($blog->image))) {
+     File::delete(public_path($blog->image));
+     }
+
+     $image = $request->file('image');
+     $imageName = time() . '_' . Str::slug($request->title) . '.' . $image->getClientOriginalExtension();
+     $image->move(public_path('blogs'), $imageName);
+     $blog->image = 'blogs/' . $imageName;
+     }
+
+     // 4. Update slug if title changed
+     if ($blog->title !== $request->title) {
+     $slug = Str::slug($request->title);
+     $count = Blog::where('slug', 'LIKE', "$slug%")->where('id', '!=', $blog->id)->count();
+     if ($count > 0) {
+     $slug = $slug . '-' . ($count + 1);
+     }
+     $blog->slug = $slug;
+     }
+
+     // 5. Update other fields
+     $blog->title = $request->title;
+     $blog->content = $request->content;
+     $blog->meta_title = $request->meta_title;
+     $blog->meta_description = $request->meta_description;
+     $blog->meta_keywords = $request->meta_keywords;
+
+     $blog->save();
+
+     // 6. Redirect with success
+     return redirect()->back()->with('success', 'Blog post updated successfully!');
+}
    
 }

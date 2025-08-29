@@ -21653,6 +21653,7 @@ img {
 }
 .footer__logo-3 img {
   margin-bottom: 30px;
+  width:100%;
 }
 .footer__logo-3 p {
   max-width: 310px;
