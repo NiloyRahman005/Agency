@@ -58,6 +58,8 @@
     
     $ourServices = App\Models\OurServices::all();
     
+    $linkLists = App\Models\socialLink::all();
+    
     ?>
     <!-- Cursor Animation -->
     <div class="cursor1"></div>
@@ -176,7 +178,7 @@
                     <li class="has-megamenu"><a href="{{ route('Ta-ask-Story') }}">Ta-ask Story</a></li>
                     <li class="has-megamenu"><a href="{{ route('blog') }}">Blog</a></li>
 
-                    <li class="has-megamenu"><a href="contact.html">Contact Us</a></li>
+                    <li class="has-megamenu"><a href="{{ route('contactUs') }}">Contact Us</a></li>
 
 
 
@@ -217,22 +219,14 @@
                 <div class="offcanvas__social">
                     <h3 class="social-title">Follow Us</h3>
                     <ul>
-                        <li><a href="#">Dribbble</a></li>
-                        <li><a href="#">Behance</a></li>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">YouTube</a></li>
+                        @forelse($linkLists as $linkedListsss)
+                            <li><a href="{{ $linkedListsss->link }}">{{ $linkedListsss->name }}</a></li>
+                        @empty
+                        @endforelse
+
                     </ul>
                 </div>
-                <div class="offcanvas__links">
-                    <ul>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="contact.html">contact</a></li>
-                        <li><a href="career.html">Career</a></li>
-                        <li><a href="blog.html">blog</a></li>
-                    </ul>
-                </div>
+
             </div>
             <div class="offcanvas__mid">
                 <div class="offcanvas__menu-wrapper">
@@ -254,37 +248,39 @@
                                 </ul>
                             </li>
                             <li>
-                                <a>Ta-Ask Story</a>
+                                <a href="{{ route('Ta-ask-Story') }}">Ta-Ask Story</a>
 
                             </li>
                             <li>
-                                <a>Blog</a>
+                                <a href="{{ route('blog') }}">Blog</a>
 
                             </li>
                             <li>
-                                <a>Contact Us</a>
+                                <a href="{{ route('contactUs') }}">Contact Us</a>
 
                             </li>
+
+
 
                         </ul>
                     </nav>
                 </div>
             </div>
             <div class="offcanvas__right">
-                <div class="offcanvas__search">
+                {{-- <div class="offcanvas__search">
                     <form action="#">
                         <input type="text" name="search" placeholder="Search keyword">
                         <button><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
-                </div>
-                <div class="offcanvas__contact">
+                </div> --}}
+                {{-- <div class="offcanvas__contact">
                     <h3>Get in touch</h3>
                     <ul>
                         <li><a href="tel:02094980547">+(02) - 094 980 547</a></li>
                         <li><a href="mailto:info@extradesign.com">info@extradesign.com</a></li>
                         <li>230 Norman Street New York, QC (USA) H8R 1A1</li>
                     </ul>
-                </div>
+                </div> --}}
                 <img src="assets/imgs/shape/11.png" alt="shape" class="shape-1">
                 <img src="assets/imgs/shape/12.png" alt="shape" class="shape-2">
             </div>
@@ -324,14 +320,16 @@
                         </div>
                         <div class="footer__social-3">
                             <ul>
-                                <li><a href="#">facebook</a></li>
-                                <li><a href="#">Twitter</a></li>
-                                <li><a href="#">Linkedin</a></li>
-                                <li><a href="#">Instagram</a></li>
+                                @forelse($linkLists as $linkLists)
+                                    <li><a href="{{ $linkLists->link }}">{{ $linkLists->name }}</a></li>
+                                @empty
+                                @endforelse
+
+
                             </ul>
                         </div>
                         <div class="footer__contact-3">
-                            <a class="end" href="contact.html">Let’s talk</a>
+                            <a class="end" href="{{ route('contactUs') }}">Let’s talk</a>
                         </div>
                     </div>
                 </div>
@@ -348,10 +346,8 @@
                             <div class="col-xxl-8 col-xl-8 col-lg-8">
                                 <div class="footer__nav-2">
                                     <ul class="footer-menu-2 menu-anim">
-                                        <li><a href="about.html">The Ta-ask Story</a></li>
-                                        <li><a href="contact.html">contact</a></li>
-                                        <li><a href="career.html">Career</a></li>
-                                        <li><a href="faq.html">FAQs</a></li>
+                                        <li><a href="{{ route('Ta-ask-Story') }}">The Ta-ask Story</a></li>
+                                        <li><a href="{{ route('contactUs') }}">contact</a></li>
                                     </ul>
                                 </div>
                             </div>

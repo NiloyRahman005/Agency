@@ -6,18 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Brand;
+use App\Models\ContactUs;
 use App\Models\Content;
 use App\Models\FeaturesOfServices;
+use App\Models\GlobalOperation;
 use App\Models\Logo;
+use App\Models\SocialLink;
 use App\Models\OurServices;
 use App\Models\SeconSectionCards;
 use App\Models\SectionSubTitle;
 use App\Models\SectionTitle;
 use App\Models\TaskStory;
+use App\Models\TeamMembers;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class HomepageController extends Controller
 {
@@ -535,56 +541,196 @@ public function blogsEdit($id)
     return view('admin.layouts.dashboard.Blog.edit',compact('blog'));
     // return $id;
 }
-public function blogEditPost(Request $request)
-{
-    return $request->all();
-    //  // 1. Validate the request
-     $request->validate([
-     'title' => 'required|string|max:255',
-     'content' => 'required|string',
-     'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-     'meta_title' => 'nullable|string|max:255',
-     'meta_description' => 'nullable|string|max:500',
-     'meta_keywords' => 'nullable|string',
-     ]);
+    public function blogEditPost(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string',
+        ]);
 
-     // 2. Find blog
-     $blog = Blog::findOrFail($request->id);
+        $blog = Blog::findOrFail($request->id);
 
-     // 3. Handle image update
-     if ($request->hasFile('image')) {
-     // Delete old image if exists
-     if ($blog->image && File::exists(public_path($blog->image))) {
-     File::delete(public_path($blog->image));
-     }
+        if ($request->hasFile('image')) {
+            if ($blog->image && File::exists(public_path($blog->image))) {
+                File::delete(public_path($blog->image));
+            }
 
-     $image = $request->file('image');
-     $imageName = time() . '_' . Str::slug($request->title) . '.' . $image->getClientOriginalExtension();
-     $image->move(public_path('blogs'), $imageName);
-     $blog->image = 'blogs/' . $imageName;
-     }
+            $image = $request->file('image');
+            $imageName = time() . '_' . Str::slug($request->title) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('blogs'), $imageName);
+            $blog->image = 'blogs/' . $imageName;
+        }
 
-     // 4. Update slug if title changed
-     if ($blog->title !== $request->title) {
-     $slug = Str::slug($request->title);
-     $count = Blog::where('slug', 'LIKE', "$slug%")->where('id', '!=', $blog->id)->count();
-     if ($count > 0) {
-     $slug = $slug . '-' . ($count + 1);
-     }
-     $blog->slug = $slug;
-     }
+        if ($blog->title !== $request->title) {
+            $slug = Str::slug($request->title);
+            $count = Blog::where('slug', 'LIKE', "$slug%")->where('id', '!=', $blog->id)->count();
+            if ($count > 0) {
+                $slug = $slug . '-' . ($count + 1);
+            }
+            $blog->slug = $slug;
+        }
 
-     // 5. Update other fields
-     $blog->title = $request->title;
-     $blog->content = $request->content;
-     $blog->meta_title = $request->meta_title;
-     $blog->meta_description = $request->meta_description;
-     $blog->meta_keywords = $request->meta_keywords;
+        $blog->title = $request->title;
+        $blog->content = $request->content;
+        $blog->meta_title = $request->meta_title;
+        $blog->meta_description = $request->meta_description;
+        $blog->meta_keywords = $request->meta_keywords;
 
-     $blog->save();
+        $blog->save();
 
-     // 6. Redirect with success
-     return redirect()->back()->with('success', 'Blog post updated successfully!');
-}
-   
+        return redirect()->back()->with('success', 'Blog post updated successfully!');
+    }
+    public function contactUsList()
+    {   
+        $contactLists = ContactUs::all();
+        return view('admin.layouts.dashboard.Contact.contactUsLists',compact('contactLists'));
+    }
+    public function contactListDelete($id)
+    {
+        ContactUs::find($id)->delete();
+        return back()->with('success',"Successfully Deleted");
+        
+    }
+    public function socialLink()
+    {
+        $socialLink = SocialLink::all();
+        return view('admin.layouts.dashboard.SocialLink.index',compact('socialLink'));
+
+    }
+    public function socialLinkPost(Request $request)
+    {
+        $request->validate([
+            'name'=>'required',
+            'link'=>'required'
+        ]);
+        $socialLink = SocialLink::create($request->all());
+        return back()->with('success',"Successfully Created");
+    }
+    public function SocialLinkDelete($id)
+    {
+       SocialLink::find($id)->delete();
+       return back()->with('success',"Successfully Deleted");
+       
+    }
+    public function globalOperations()
+    {
+        $globalOperation = GlobalOperation::all();
+        return view('admin.layouts.dashboard.GlobalOperation.index',compact('globalOperation'));
+    }
+    public function globalOperationStore(Request $request)
+    {
+    // Validate the request
+    $request->validate([
+    'country_name' => 'required',
+    'image' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+    ]);
+
+    // Create a new instance of GlobalOperation
+    $globalOperation = new GlobalOperation();
+
+    // Assign values to model attributes
+    $globalOperation->country_name = $request->country_name;
+
+    // Handle image upload
+    if ($request->hasFile('image')) {
+    // Store the image in the globalOperation folder
+    $image = $request->file('image');
+    $imageName = time() . '.' . $image->getClientOriginalExtension();
+    $imagePath = 'globalOperation/' . $imageName; // Store in the globalOperation folder
+    $image->move(public_path('globalOperation/'), $imageName); // Move image to folder
+
+    // Save the image path (relative to public/)
+    $globalOperation->image = $imagePath;
+    }
+
+    // Save the record
+    $globalOperation->save();
+
+    // Redirect with success message
+    return redirect()->back()->with('success', 'Global operation saved successfully!');
+    }
+    public function globalOperationDelete($id)
+    {
+        // Find the record by ID
+        $globalOperation = GlobalOperation::find($id);
+
+        // Check if the record exists
+        if ($globalOperation) {
+            // Check if an image exists and delete it from the server
+            if ($globalOperation->image && file_exists(public_path($globalOperation->image))) {
+                unlink(public_path($globalOperation->image)); // Remove the image from the folder
+            }
+
+            // Delete the record from the database
+            $globalOperation->delete();
+
+            // Return success message
+            return redirect()->back()->with('success', 'Global operation deleted successfully!');
+        }
+
+        // If the record doesn't exist
+        return redirect()->back()->with('error', 'Record not found.');
+    }
+    public function teamMember()
+    {
+        $teamMembers = TeamMembers::all();
+        return view('admin.layouts.dashboard.TeamMember.index',compact('teamMembers'));
+    }
+    public function teamMemberPost(Request $request)
+    {
+        // Validate the request data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048', // validate the image
+        ]);
+
+        // Handle image upload if exists
+       if ($request->hasFile('image')) {
+       // Store the image in the globalOperation folder
+       $image = $request->file('image');
+       $imageName = time() . '.' . $image->getClientOriginalExtension();
+       $imagePath = 'TeamMembers/' . $imageName; // Store in the globalOperation folder
+       $image->move(public_path('TeamMembers/'), $imageName); // Move image to folder
+
+       // Save the image path (relative to public/)
+      
+       }
+
+        // Create or update the TeamMember record
+        $teamMember = TeamMembers::create([
+            'name' => $request->name,
+            'designation' => $request->designation,
+            'image' => $imagePath, // Store image path
+        ]);
+
+        // Return success message
+        return back()->with('success', 'Team member created successfully!');
+    }
+    public function teamMemberDelete($id)
+    {
+         // Find the record by ID
+         $teamMembers = TeamMembers::find($id);
+
+         // Check if the record exists
+         if ($teamMembers) {
+         // Check if an image exists and delete it from the server
+         if ($teamMembers->image && file_exists(public_path($teamMembers->image))) {
+         unlink(public_path($teamMembers->image)); // Remove the image from the folder
+         }
+
+         // Delete the record from the database
+         $teamMembers->delete();
+
+         // Return success message
+         return redirect()->back()->with('success', 'Team Members deleted successfully!');
+         }
+
+         // If the record doesn't exist
+         return redirect()->back()->with('error', 'Team Members not found.');
+    }
 }

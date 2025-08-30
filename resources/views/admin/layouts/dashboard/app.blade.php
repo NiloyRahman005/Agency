@@ -970,6 +970,44 @@
 
                         </ul>
                     </li>
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Contact Us </span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.contactUsList') }}">Lists</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Social Link</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.socialLink') }}">Lists</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Global Operations</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.globalOperations') }}">Lists</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Team Member</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.teamMember') }}">Members</a></li>
+                        </ul>
+                    </li>
+
 
                     {{-- <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                             <i class="flaticon-381-networking"></i>

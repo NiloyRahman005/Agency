@@ -10,6 +10,11 @@ Route::get('/ourServiceDetails/{name}',[FontendController::class,'ourServiceDeta
 Route::get('/Ta-ask-Story',[FontendController::class,'Ta_ask_Story'])->name('Ta-ask-Story');
 Route::get('/blog',[FontendController::class,'blog'])->name('blog');
 Route::get('/blog/details/{slug}',[FontendController::class,'blogDetails'])->name('blogDetails');
+Route::get('/contact-us',[FontendController::class,'contactUs'])->name('contactUs');
+Route::post('/contactUs',[FontendController::class,'contactUsPost'])->name('contactUsPost');
+
+
+
 
 
 
@@ -97,9 +102,35 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     //
     // Route::get('/blogEdit/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'blogEdit'])->name('blogEdit');
-      Route::get('/blogsEdit/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'blogsEdit'])->name('blogsEdit');
+    Route::get('/blogsEdit/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'blogsEdit'])->name('blogsEdit');
     
     Route::post('/blogEditPost',[\App\Http\Controllers\Admin\HomePageController::class,'blogEditPost'])->name('blogEditPost');
+
+    Route::get('/contactUs',[\App\Http\Controllers\Admin\HomePageController::class,'contactUsList'])->name('contactUsList');
+    Route::get('/contactListDelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'contactListDelete'])->name('contactListDelete');
+
+    Route::get('/socialLink',[\App\Http\Controllers\Admin\HomePageController::class,'socialLink'])->name('socialLink');
+    Route::post('/socialLinkPost',[\App\Http\Controllers\Admin\HomePageController::class,'socialLinkPost'])->name('socialLinkPost');
+    
+    Route::get('/SocialLinkDelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'SocialLinkDelete'])->name('SocialLinkDelete');
+
+    Route::get('/globalOperations',[\App\Http\Controllers\Admin\HomePageController::class,'globalOperations'])->name('globalOperations');
+
+    Route::post('/globalOperationStore',[\App\Http\Controllers\Admin\HomePageController::class,'globalOperationStore'])->name('globalOperationStore');
+
+    Route::get('/globalOpearationDelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'globalOperationDelete'])->name('globalOpearationDelete');
+
+    Route::get('/teamMember',[\App\Http\Controllers\Admin\HomePageController::class,'teamMember'])->name('teamMember');
+
+    Route::post('/teamMemberPost',[\App\Http\Controllers\Admin\HomePageController::class,'teamMemberPost'])->name('teamMemberPost');
+    Route::get('/teamMemberDelete/{id}',[\App\Http\Controllers\Admin\HomePageController::class,'teamMemberDelete'])->name('teamMemberDelete');
+
+
+    
+  
+
+
+  
 
 
    

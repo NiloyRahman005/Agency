@@ -96,7 +96,7 @@
 
 
 
-        <div class="container-fluid mx-auto">
+        {{-- <div class="container-fluid mx-auto">
             <div class="global-section">
                 <!-- <p class="text-uppercase small">We Have</p> -->
                 <h1>WE'RE GLOBAL</h1>
@@ -165,7 +165,407 @@
                 highlightCountry(); // initial
                 setInterval(highlightCountry, 5000);
             });
+        </script> --}}
+
+
+        <div class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-dark">
+            <div class="row w-100">
+                <div class="col-12">
+                    <div class="global-operations-container ">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-md-12 text-section">
+                                <div class="content-wrapper">
+                                    <p class="subtitle text-uppercase mb-3">WE HAVE</p>
+                                    <h1 class="main-title mb-4">Global operations</h1>
+                                    <p class="description mb-4">
+                                        NEXT Group is a team of 450 people from diverse backgrounds,
+                                        operating from 5 different countries, including UAE, Malaysia,
+                                        Bangladesh, Sri Lanka & Cyprus.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 image-section">
+                                <div class="cycling-container">
+                                    <div class="image-wrapper">
+                                        <img id="cycling-image" src="/image.png" alt="Country Image"
+                                            class="country-image" />
+                                        <div class="image-overlay">
+                                            <span class="location-prefix">in</span>
+                                            <h2 id="cycling-text" class="country-name">Bangladesh</h2>
+                                        </div>
+                                    </div>
+                                    <div class="country-list">
+                                        @forelse($globalOperations as $key => $global)
+                                            <div class="country-item @if ($key === 0) active @endif"
+                                                data-country="{{ $global->country_name }}">
+                                                {{ $global->country_name }}
+                                            </div>
+                                        @empty
+                                            <p>No countries available.</p>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                // Countries to cycle through
+                const countries = [
+                    @foreach ($globalOperations as $global)
+                        "{{ $global->country_name }}",
+                    @endforeach
+                ];
+
+                // Country images - replace with actual images if available
+                const countryImages = {
+                    @foreach ($globalOperations as $global)
+                        "{{ $global->country_name }}": "{{ asset($global->image) }}",
+                    @endforeach
+                };
+
+                let currentIndex = 0;
+                let cyclingInterval;
+                let isManualSelection = false;
+
+                function updateDisplay(index, animate = true) {
+                    const country = countries[index];
+                    const $image = $("#cycling-image");
+                    const $text = $("#cycling-text");
+                    const $countryItems = $(".country-item");
+
+                    // Update active state
+                    $countryItems.removeClass("active cycling");
+                    $countryItems.eq(index).addClass("active");
+
+                    if (animate) {
+                        $countryItems.eq(index).addClass("cycling");
+
+                        // Fade out image by adding class
+                        $image.addClass("fading-out");
+
+                        // Reset text position before animating
+                        $text.css({
+                            opacity: 0,
+                            transform: "translateY(20px)" // Reset vertical position to avoid overlap
+                        });
+
+                        // Animate text fade out and slide down before update
+                        $text
+                            .stop(true, true)
+                            .animate({
+                                opacity: 0
+                            }, 400, function() {
+                                // Change image source & text after fade out
+                                $image.attr("src", countryImages[country]);
+                                $text.text(country);
+
+                                // Fade in image
+                                $image.removeClass("fading-out");
+
+                                // Animate text fade in and slide up using transform for smooth movement
+                                $text.css({
+                                    opacity: 0,
+                                    transform: "translateY(20px)"
+                                }).animate({
+                                    opacity: 1,
+                                    transform: "translateY(0px)" // Reset to original position
+                                }, 800, function() {
+                                    setTimeout(() => {
+                                        $countryItems.eq(index).removeClass("cycling");
+                                    }, 800);
+                                });
+                            });
+                    } else {
+                        // Immediate update without animation
+                        $image.attr("src", countryImages[country]);
+                        $text.text(country);
+                        $text.css({
+                            opacity: 1,
+                            transform: "translateY(0)" // Ensure text starts from the top without offset
+                        });
+                    }
+                }
+
+                function startCycling() {
+                    cyclingInterval = setInterval(() => {
+                        if (!isManualSelection) {
+                            currentIndex = (currentIndex + 1) % countries.length;
+                            updateDisplay(currentIndex);
+                        }
+                    }, 3000); // Every 3 seconds
+                }
+
+                function stopCycling() {
+                    if (cyclingInterval) {
+                        clearInterval(cyclingInterval);
+                    }
+                }
+
+                // Manual selection
+                $(".country-item").on("click", function() {
+                    const selectedCountry = $(this).data("country");
+                    const selectedIndex = countries.indexOf(selectedCountry);
+
+                    if (selectedIndex !== -1) {
+                        isManualSelection = true;
+                        currentIndex = selectedIndex;
+                        updateDisplay(currentIndex);
+
+                        stopCycling();
+
+                        // Resume auto cycling after 5 seconds
+                        setTimeout(() => {
+                            isManualSelection = false;
+                            startCycling();
+                        }, 5000);
+                    }
+                });
+
+                // Hover effects on country items
+                $(".country-item")
+                    .on("mouseenter", function() {
+                        if (!$(this).hasClass("active")) {
+                            $(this).css("transform", "translateX(5px)");
+                        }
+                    })
+                    .on("mouseleave", function() {
+                        if (!$(this).hasClass("active")) {
+                            $(this).css("transform", "translateX(0)");
+                        }
+                    });
+
+                // Initialize display without animation
+                updateDisplay(0, false);
+
+                // Start cycling
+                startCycling();
+
+                // Pause cycling when page is hidden
+                $(document).on("visibilitychange", function() {
+                    if (document.hidden) {
+                        stopCycling();
+                    } else if (!isManualSelection) {
+                        startCycling();
+                    }
+                });
+
+                // Responsive adjustments (optional)
+                $(window).on("resize", function() {
+                    const windowWidth = $(window).width();
+                    if (windowWidth < 768) {
+                        $(".global-operations-container").addClass("mobile-layout");
+                    } else {
+                        $(".global-operations-container").removeClass("mobile-layout");
+                    }
+                });
+            });
         </script>
+
+
+        <style>
+            .global-operations-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 2rem;
+                background-color: #171717;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            }
+
+            .text-section {
+                padding: 2rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+                font-weight: 600;
+                letter-spacing: 2px;
+                color: #888;
+                margin-bottom: 1rem;
+            }
+
+            .main-title {
+                font-size: 3.5rem;
+                font-weight: 300;
+                line-height: 1.1;
+                margin-bottom: 2rem;
+                color: white;
+            }
+
+            .description {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                color: #ccc;
+                max-width: 500px;
+            }
+
+            .image-section {
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cycling-container {
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .image-wrapper {
+                position: relative;
+                width: 100%;
+                height: 300px;
+                border-radius: 15px;
+                overflow: hidden;
+                margin-bottom: 2rem;
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            }
+
+            .country-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: opacity 0.8s ease, transform 0.8s ease;
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            .country-image.fading-out {
+                opacity: 0;
+                transform: scale(1.1);
+            }
+
+            .image-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+                padding: 2rem;
+                color: white;
+            }
+
+            .location-prefix {
+                font-size: 1.2rem;
+                font-weight: 300;
+                opacity: 0.8;
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            .country-name {
+                font-size: 2.5rem;
+                font-weight: 600;
+                margin: 0;
+            }
+
+            .country-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .country-item {
+                padding: 0.8rem 1.2rem;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: 500;
+                border: 2px solid transparent;
+                backdrop-filter: blur(10px);
+                color: #fff;
+            }
+
+            .country-item:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                transform: translateX(5px);
+            }
+
+            .country-item.active {
+                background-color: rgba(100, 108, 255, 0.3);
+                border-color: #646cff;
+                color: #646cff;
+                font-weight: 600;
+            }
+
+            .country-item.cycling {
+                animation: pulse 0.6s ease-in-out;
+            }
+
+            @keyframes pulse {
+
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.05);
+                }
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .global-operations-container {
+                    padding: 1rem;
+                    margin: 1rem;
+                }
+
+                .main-title {
+                    font-size: 2.5rem;
+                }
+
+                .text-section,
+                .image-section {
+                    padding: 1rem;
+                }
+
+                .image-wrapper {
+                    height: 250px;
+                }
+
+                .country-name {
+                    font-size: 2rem;
+                }
+
+                .country-list {
+                    flex-direction: row;
+                    overflow-x: auto;
+                }
+
+                .country-item {
+                    margin-right: 10px;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .main-title {
+                    font-size: 2rem;
+                }
+
+                .country-name {
+                    font-size: 1.5rem;
+                }
+
+                .image-wrapper {
+                    height: 200px;
+                }
+
+                .country-item {
+                    font-size: 0.9rem;
+                }
+            }
+        </style>
 
 
 
@@ -242,4 +642,9 @@
         </section>
 
     </main>
+    <style>
+        .dark .hero__text-animation {
+            color: #fff;
+        }
+    </style>
 @endsection

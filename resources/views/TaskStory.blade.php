@@ -12,6 +12,61 @@
             </p>
         </div>
     </div>
+    <!-- Team area start -->
+    <section class="team__area-6">
+        <div class="container line pt-120">
+            <span class="line-3"></span>
+
+            <div class="row">
+                <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-8 offset-xxl-4 offset-xl-4">
+                    <div class="sec-title-wrapper">
+                        <h2 class="sec-title animation__char_come text-center">Our Talented team </h2>
+                        {{-- <p>We’re a diverse team that works as fancies attention to details,
+                            enjoys beers on Friday nights and
+                            aspires to design the dent in the universe.</p> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swiper team__slider">
+            <div class="swiper-wrapper">
+                @foreach ($teamMembers as $member)
+                    <div class="swiper-slide team__slide">
+                        <a href="#">
+                            <!-- Dynamically set the image from the team member data -->
+                            <img src="{{ asset($member->image) }}" alt="Team Member">
+                            <div class="team__info">
+                                <!-- Dynamically set the name and role -->
+                                <h4 class="team__member-name-6">{{ $member->name }}</h4>
+                                <h5 class="team__member-role-6">{{ $member->designation }}</h5>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+
+        <div class="container line pt-150">
+            <div class="line-3"></div>
+        </div>
+
+
+    </section>
+    <!-- Team area end -->
+
+
+
+
+    <!-- Counter area start -->
+
+    <!-- Counter area end -->
+
+
+    <!-- CTA area start -->
+
+    <!-- CTA area end -->
     <style>
         .header-image {
             max-width: 350px;
