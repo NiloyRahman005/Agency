@@ -24,9 +24,10 @@ use Illuminate\Http\Request;
 
 class FontendController extends Controller
 {
-    //
+    
     public function index()
     {
+        // return "hello";
         $sectionSubTitle = SectionSubTitle::first();
         $sectionTitle = SectionTitle::first();
         $video = Video::first();
@@ -36,8 +37,7 @@ class FontendController extends Controller
         $ourServices = OurServices::all();
         $brands = Brand::all();
         $globalOperations = GlobalOperation::all();
-        return
-        view('homepage',compact('sectionSubTitle','sectionTitle','video','content','banner','secondSection','ourServices','brands','globalOperations'));
+        return view('homepage',compact('sectionSubTitle','sectionTitle','video','content','banner','secondSection','ourServices','brands','globalOperations'));
     }
     public function ourServiceDetails($name)
     {
@@ -47,7 +47,7 @@ class FontendController extends Controller
        ->with(['features:id,service_id,title,content'])
        ->firstOrFail();
 
-        return view('OurServiceDetails',compact('ourService'));
+        return view('ourServiceDetails',compact('ourService'));
     }
     public function Ta_ask_Story()
     {

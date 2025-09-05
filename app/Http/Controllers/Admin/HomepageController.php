@@ -31,7 +31,7 @@ class HomepageController extends Controller
     public function logo()
     {
         $Logo = Logo::first();
-        return view('admin.layouts.dashboard.homepage.logo', compact('Logo'));
+        return view('admin.layouts.dashboard.homePage.logo', compact('Logo'));
     }
     public function logoStore(Request $request)
     {
@@ -85,7 +85,7 @@ class HomepageController extends Controller
         $sectionSubTitle = SectionSubTitle::first();
         $SectionTitle = SectionTitle::first();
 
-        return view('admin.layouts.dashboard.homepage.topSectionTitle', compact('sectionSubTitle', 'SectionTitle'));
+        return view('admin.layouts.dashboard.homePage.topSectionTitle', compact('sectionSubTitle', 'SectionTitle'));
     }
     public function secSubTitlePost(Request $request)
     {
@@ -126,7 +126,7 @@ class HomepageController extends Controller
     public function Video()
     {
         $video = Video::first(); // assuming only one video record
-        return view('admin.layouts.dashboard.homepage.video', compact('video'));
+        return view('admin.layouts.dashboard.homePage.video', compact('video'));
     }
     public function videoStore(Request $request)
     {
@@ -173,7 +173,7 @@ class HomepageController extends Controller
     public function content()
     {
         $content = Content::first(); // assuming only one content row
-        return view('admin.layouts.dashboard.homepage.content', compact('content'));
+        return view('admin.layouts.dashboard.homePage.content', compact('content'));
     }
     public function contentPost(Request $request)
     {
@@ -206,7 +206,7 @@ class HomepageController extends Controller
     public function banner()
     {
         $banner = Banner::first();
-        return view('admin.layouts.dashboard.homepage.banner', compact('banner'));
+        return view('admin.layouts.dashboard.homePage.banner', compact('banner'));
     }
     public function bannerPost(Request $request)
     {
@@ -412,6 +412,7 @@ class HomepageController extends Controller
    }
     public function brands()
     {
+        
         $brands = Brand::all();
         return view('admin.layouts.dashboard.forthSection.brand', compact('brands'));
     }

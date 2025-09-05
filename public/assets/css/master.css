@@ -4174,7 +4174,7 @@ img {
 }
 .offcanvas__menu-wrapper.mean-container .mean-nav ul li a.mean-expand {
   width: 60px;
-  height: 96px;
+  height: 70%;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -4217,7 +4217,7 @@ img {
   border-top: 1px solid var(--black-4);
 }
 .offcanvas__menu-wrapper.mean-container .mean-nav ul li li a {
-  font-size: 24px;
+  font-size: 20px;
   text-transform: capitalize;
   border-top: none !important;
   padding: 20px 0 20px 150px;
@@ -4251,7 +4251,7 @@ img {
 }
 @media only screen and (max-width: 767px) {
   .offcanvas__menu-wrapper.mean-container .mean-nav ul li li a {
-    font-size: 18px;
+    font-size: 15px;
     padding: 15px 0 15px 30px;
   }
 }
