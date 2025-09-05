@@ -47,6 +47,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/master.css') }}">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="stylesheet" href="{{ asset('resposnive.css') }}">
+    @stack('head')
 
 </head>
 
@@ -378,6 +379,8 @@
     <script src="{{ asset('assets/js/vanilla-tilt.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.meanmenu.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
+
+    @stack('script')
 
 </body>
 

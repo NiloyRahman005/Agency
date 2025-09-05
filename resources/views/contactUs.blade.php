@@ -1,10 +1,23 @@
 @extends('app')
 @section('title')
 
+
     <!-- Contact area end -->
 @section('content')
+    @push('head')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css" />
+    @endpush
 
     <section class="contact__area-6">
+        {{-- <h2>Enter Your Phone Number</h2>
+        <form id="phoneForm">
+            <label for="phone">Phone Number:</label><br>
+            <input id="phone" type="tel" required>
+            <div id="country-name"></div>
+            <button type="submit">Submit</button>
+        </form> --}}
+
+
 
         <div class="container g-0 line pt-120 pb-110">
             @if (session('success'))
@@ -42,7 +55,7 @@
                             @csrf
                             <div class="row g-3">
                                 <div class="col-xxl-6 col-xl-6 col-12">
-                                    <input type="text" name="name" placeholder="Name *" required>
+                                    <input type="text" name="full_name" placeholder="Full Name *" required>
                                     @error('name')
                                         <div class="invalid-feedback" style="display:block">{{ $message }}</div>
                                     @enderror
@@ -53,6 +66,27 @@
                                         <div class="invalid-feedback" style="display:block">{{ $message }}</div>
                                     @enderror
                                 </div>
+                            </div>
+                            <div class="row g-3">
+                                {{-- <div class="col-12 mb-2">
+
+                                    <input id="phone" type="tel" required class="form-control w-100">
+                                    <div id="country-name"></div>
+                                </div> --}}
+                                <div class="row g-3">
+                                    <div class="col-12 mb-5">
+                                        <input id="phone" type="tel" class="form-control w-100" name="phone"
+                                            required>
+                                        <input type="hidden" id="country_name" name="country_code">
+                                        <div id="country-name" class="mt-3"></div>
+                                        <div id="phone-error" style="color:red; font-size:14px; display:none;"></div>
+
+                                        @error('phone')
+                                            <div class="invalid-feedback" style="display:block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="row g-3">
                                 <div class="col-12">
@@ -80,5 +114,68 @@
         .line::after {
             display: none !important;
         }
+
+        .iti {
+            width: 100%;
+        }
     </style>
+    @push('script')
+        <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+        <script>
+            const input = document.querySelector("#phone");
+            const errorDiv = document.getElementById("phone-error");
+
+            // intl-tel-input
+            const iti = window.intlTelInput(input, {
+                initialCountry: "bd",
+                preferredCountries: ["bd", "in", "us", "gb"],
+                separateDialCode: true,
+                autoPlaceholder: "polite",
+                formatOnDisplay: true,
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+            });
+
+            function updateCountry() {
+                const data = iti.getSelectedCountryData();
+                document.getElementById("country-name").textContent = "Selected Country: " + data.name;
+                document.getElementById("country_name").value = data.name;
+            }
+            input.addEventListener("countrychange", updateCountry);
+            updateCountry();
+
+            // Phone Validation Function
+            function validatePhone() {
+                const value = input.value.trim();
+                const cleaned = value.replace(/-/g, ""); // remove dashes
+
+                // Rule 1 & 2: only numbers and "-"
+                if (!/^[0-9-]+$/.test(value)) {
+                    errorDiv.textContent = "Phone can only contain digits and '-'";
+                    errorDiv.style.display = "block";
+                    return false;
+                }
+
+                // Rule 3: digits length between 8 and 15
+                if (cleaned.length < 8 || cleaned.length > 15) {
+                    errorDiv.textContent = "Phone must be between 8 and 15 digits.";
+                    errorDiv.style.display = "block";
+                    return false;
+                }
+
+                // Valid
+                errorDiv.style.display = "none";
+                return true;
+            }
+
+            // Live validation while typing
+            input.addEventListener("input", validatePhone);
+
+            // Final validation before form submit
+            document.querySelector("form").addEventListener("submit", function(e) {
+                if (!validatePhone()) {
+                    e.preventDefault();
+                }
+            });
+        </script>
+    @endpush
 @endsection

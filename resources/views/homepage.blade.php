@@ -576,8 +576,8 @@
         <section class="portfolio__service service-v5 pt-140 pb-140 blog__animation">
             <div class="container">
                 <div class="row">
-                    <div class="col-xxl-5 col-xl-5 col-lg-6 col-md-6">
-                        <h2 class="sec-title animation__char_come">
+                    <div class="col-12">
+                        <h2 class="sec-title animation__char_come mx-auto text-center">
                             Our Services
                         </h2>
                     </div>
@@ -586,7 +586,7 @@
                 <div class="portfolio__service-list">
                     <div class="row">
                         @forelse($ourServices as $ourService)
-                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3">
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4">
                                 <div class="portfolio__service-item">
                                     <a href="{{ route('ourServiceDetails', $ourService->title) }}">
                                         <h3 class="ps-title">{{ $ourService->title ?? '' }}</h3>

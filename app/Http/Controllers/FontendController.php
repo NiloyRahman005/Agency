@@ -72,13 +72,24 @@ class FontendController extends Controller
     }
     public function contactUsPost(Request $request)
     {
+        // return $request->all();
          // 1. Validate form input
          $validated = $request->validate([
-         'name' => 'required|string|max:100',
-         'email' => 'required|email|max:255',
-         'message' => 'required|string|max:5000',
-         ]);
-
+         'full_name' => 'required|string|max:255',
+         'email' => 'required|email',
+         'phone' => [
+         'required',
+         'regex:/^[0-9\-]+$/', // only digits and -
+         function ($attribute, $value, $fail) {
+         $digits = str_replace('-', '', $value);
+         if (strlen($digits) < 8 || strlen($digits)> 15) {
+             $fail('The phone must be between 8 and 15 digits.');
+             }
+             }
+             ],
+             'country_code' => 'required|string',
+             'message' => 'required|string',
+             ]);
          // 2. Save to database
          ContactUs::create($validated);
         

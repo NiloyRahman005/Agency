@@ -11,17 +11,23 @@
                         <table class="table table-striped">
                             <tr>
                                 <th>Serial</th>
-                                <th>Name</th>
+                                <th>Full Name</th>
+                                <th>Country-Code</th>
+                                <th>Phone</th>
                                 <th>Email</th>
                                 <th>Message</th>
+                                <th>Created-At</th>
                                 <th>Action</th>
                             </tr>
                             @forelse($contactLists as $key=>$contactsLists)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $contactsLists->name }}</td>
+                                    <td>{{ $contactsLists->country_code }}</td>
+                                    <td>{{ $contactsLists->phone }}</td>
                                     <td>{{ $contactsLists->email }}</td>
                                     <td>{{ $contactsLists->message }}</td>
+                                    <td>{{ $contactsLists->created_at->format('d-M-Y') }}</td>
 
                                     <td>
                                         <a href="{{ route('admin.contactListDelete', $contactsLists->id) }}"

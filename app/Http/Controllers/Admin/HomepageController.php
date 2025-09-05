@@ -587,7 +587,7 @@ public function blogsEdit($id)
     }
     public function contactUsList()
     {   
-        $contactLists = ContactUs::all();
+        $contactLists = ContactUs::latest()->get();
         return view('admin.layouts.dashboard.Contact.contactUsLists',compact('contactLists'));
     }
     public function contactListDelete($id)

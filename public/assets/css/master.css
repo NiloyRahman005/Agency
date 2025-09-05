@@ -13527,7 +13527,7 @@ img {
   background-position: bottom right;
 }
 .portfolio__service .sec-title {
-  max-width: 350px;
+  /* max-width: 350px; */
   text-indent: 80px;
   text-transform: uppercase;
   opacity: 0;
