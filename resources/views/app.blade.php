@@ -60,7 +60,7 @@
     $ourServices = App\Models\OurServices::all();
     
     $linkLists = App\Models\SocialLink::all();
-    
+    $address = App\Models\Address::first();
     ?>
     <!-- Cursor Animation -->
     <div class="cursor1"></div>
@@ -209,7 +209,7 @@
             <div class="offcanvas__left">
                 <div class="offcanvas__logo">
 
-                    <a href="index.html">
+                    <a href="{{ route('index') }}">
                         @if ($logo && $logo->logo && file_exists($logoPath))
                             {{-- <img src="{{ asset($logo->logo) }}" alt="Site Logo" class="responsive-logo"> --}}
                             <img src="{{ asset($logo->logo) }}" alt="Offcanvas Logo">
@@ -274,14 +274,7 @@
                         <button><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </div> --}}
-                {{-- <div class="offcanvas__contact">
-                    <h3>Get in touch</h3>
-                    <ul>
-                        <li><a href="tel:02094980547">+(02) - 094 980 547</a></li>
-                        <li><a href="mailto:info@extradesign.com">info@extradesign.com</a></li>
-                        <li>230 Norman Street New York, QC (USA) H8R 1A1</li>
-                    </ul>
-                </div> --}}
+
                 <img src="assets/imgs/shape/11.png" alt="shape" class="shape-1">
                 <img src="assets/imgs/shape/12.png" alt="shape" class="shape-2">
             </div>
@@ -310,14 +303,18 @@
             <footer class="footer__area-3">
                 <div class="footer__top-3">
                     <div class="footer__top-wrapper-3">
-                        <div class="footer__logo-3 pt-120">
+                        <div class="footer__logo-3 pt-120 text-light">
                             @if ($logo && $logo->logo && file_exists($logoPath))
-                                <img src="{{ asset($logo->logo) }}" alt="Footer Logo">
+                                <img src="{{ asset($logo->logo) }}" alt="Footer Logo" class="mb-3"
+                                    style="max-width: 180px;">
                             @endif
 
-                            {{-- <p>When do they work well, and when do they on us and finally, when do we actually need how
-                                can we avoid
-                                them.</p> --}}
+                            @if (isset($address->address))
+                                <div class="footer-address mt-4" style="line-height: 1.8;">
+                                    <p><i class="bi bi-geo-alt-fill"></i> {!! $address->address !!}
+                                    </p>
+                                </div>
+                            @endif
                         </div>
                         <div class="footer__social-3">
                             <ul>

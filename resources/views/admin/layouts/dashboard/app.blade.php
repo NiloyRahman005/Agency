@@ -48,6 +48,8 @@
         rel="stylesheet" type="text/css" />
 
     <link href="{{ asset('admin/public/assets/css/style.css') }}" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link href="{{ asset('admin/public/assets/vendor/toastr/css/toastr.min.css') }}" rel="stylesheet" type="text/css">
 
     @stack('link')
@@ -1005,6 +1007,16 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('admin.teamMember') }}">Members</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-networking"></i>
+                            <span class="nav-text">Add Company Address</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.companyAddress') }}">Add Company Address</a></li>
                         </ul>
                     </li>
 

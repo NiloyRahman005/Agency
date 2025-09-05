@@ -36,9 +36,11 @@
 
                             {{-- Content --}}
 
+
                             <div class="mb-3">
                                 <label class="form-label">Content</label>
-                                <textarea name="content" class="form-control @error('content') is-invalid @enderror" cols="30" rows="5">{{ old('content', $taskStory->content ?? '') }}</textarea>
+                                <textarea name="content" class="form-control summernote @error('content') is-invalid @enderror" cols="30"
+                                    rows="5">{{ old('content', $taskStory->content ?? '') }}</textarea>
                                 @error('content')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -95,7 +97,7 @@
 
                             {{-- ✅ Show content only if not null --}}
                             @if (!empty($taskStory->content))
-                                <p>{{ $taskStory->content }}</p>
+                                <p>{!! $taskStory->content !!}</p>
                             @else
                                 <p class="text-muted">No content added yet</p>
                             @endif
@@ -112,6 +114,16 @@
 
     @push('script')
         <script src="{{ asset('admin/public/assets/vendor/summernote/js/summernote.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        </script>
+
+
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+        </script>
+
+
         <script>
             $(document).ready(function() {
                 // ✅ Preview for new service upload
@@ -127,6 +139,43 @@
                 }
                 $("#imageUpload").on('change', function() {
                     readURL(this);
+                });
+
+                //summernote
+                $('.summernote').summernote({
+                    height: 300,
+                    placeholder: "Write your blog content here...",
+                    tabsize: 2,
+                    focus: true,
+                    toolbar: [
+                        ['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                        ['font', ['fontname', 'fontsize', 'color', 'forecolor', 'backcolor']],
+                        ['para', ['ul', 'ol', 'paragraph', 'height']],
+                        ['insert', ['link', 'picture', 'video', 'table', 'hr', 'codeview', 'emoji']],
+                        ['misc', ['fullscreen', 'undo', 'redo', 'help', 'print', 'codeview']],
+                        ['fontstyle', ['superscript', 'subscript', 'clear']],
+                    ],
+                    popover: {
+                        image: [
+                            ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                            ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                            ['remove', ['removeMedia']]
+                        ],
+                        link: [
+                            ['link', ['linkDialogShow', 'unlink']]
+                        ],
+                        table: [
+                            ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                            ['delete', ['deleteRow', 'deleteCol', 'deleteTable']]
+                        ],
+                        air: [
+                            ['color', ['color']],
+                            ['font', ['bold', 'underline', 'clear']],
+                            ['para', ['ul', 'paragraph']],
+                            ['table', ['table']],
+                            ['insert', ['link', 'picture']]
+                        ]
+                    }
                 });
             });
         </script>

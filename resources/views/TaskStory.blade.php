@@ -8,7 +8,9 @@
             <h1 class="story-title">The Ta-ask Story</h1>
 
             <p class="story-text highlight">
-                {{ $taskStory->content }}
+                @if (isset($taskStory->content))
+                    {!! $taskStory->content !!}
+                @endif
             </p>
         </div>
     </div>

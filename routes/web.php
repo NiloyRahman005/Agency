@@ -131,6 +131,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/teamMemberDelete/{id}',[\App\Http\Controllers\Admin\HomepageController::class,'teamMemberDelete'])->name('teamMemberDelete');
 
 
+    //Address
+    Route::get('/companyAddress',[\App\Http\Controllers\Admin\HomepageController::class,'companyAddress'])->name('companyAddress');
+    Route::post('/companyAddressPost',[\App\Http\Controllers\Admin\HomepageController::class,'companyAddressPost'])->name('companyAddressPost');
+
+    Route::get('/clearAddress',[\App\Http\Controllers\Admin\HomepageController::class,'clearAddress'])->name('clearAddress');
+
     
   
 

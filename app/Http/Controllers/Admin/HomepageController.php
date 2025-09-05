@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Address;
 use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Brand;
@@ -353,66 +354,67 @@ class HomepageController extends Controller
         OurServices::find($id)->delete();
         return back()->with('success', "Successfully Deleted");
     }
-     public function serviceContentAdd($id)
-     {
+    public function serviceContentAdd($id)
+    {
         $ourServices = OurServices::findOrFail($id);
-        $FeaturesOfServices = FeaturesOfServices::where('service_id',$id)->get();
-        return view('admin.layouts.dashboard.forthSection.content_add_page',
-        compact('ourServices','FeaturesOfServices'));
-
-     }
+        $FeaturesOfServices = FeaturesOfServices::where('service_id', $id)->get();
+        return view(
+            'admin.layouts.dashboard.forthSection.content_add_page',
+            compact('ourServices', 'FeaturesOfServices')
+        );
+    }
     public function serviceBasedFeaturePost(Request $request)
     {
-    // Validate request (optional but recommended)
-    $request->validate([
-    'service_id' => 'required|integer|exists:our_services,id',
-    'sections' => 'required|array',
-    'sections.*.title' => 'required|string|max:255',
-    'sections.*.content' => 'required|string',
-    ]);
+        // Validate request (optional but recommended)
+        $request->validate([
+            'service_id' => 'required|integer|exists:our_services,id',
+            'sections' => 'required|array',
+            'sections.*.title' => 'required|string|max:255',
+            'sections.*.content' => 'required|string',
+        ]);
 
-    $serviceId = $request->service_id;
+        $serviceId = $request->service_id;
 
-    foreach ($request->sections as $section) {
-    FeaturesOfServices::create([
-    'service_id' => $serviceId,
-    'title' => $section['title'],
-    'content' => $section['content'],
-    ]);
+        foreach ($request->sections as $section) {
+            FeaturesOfServices::create([
+                'service_id' => $serviceId,
+                'title' => $section['title'],
+                'content' => $section['content'],
+            ]);
+        }
+
+        return back()->with('success', "Successfully Created");
     }
+    public function featuresEdit(Request $request)
+    {
+        $id = $request->id;
+        $bagName = "feature_$id";
 
-    return back()->with('success',"Successfully Created");
+        // Create a new Validator instance
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            // Redirect back with errors and the input, using a named error bag
+            return back()->withErrors($validator, $bagName)->withInput();
+        }
+
+        // If validation passes, update the record
+        FeaturesOfServices::find($id)->update($request->only('title', 'content'));
+
+        return back()->with('success', "Successfully Updated");
     }
-   public function featuresEdit(Request $request)
-   {
-   $id = $request->id;
-   $bagName = "feature_$id";
-
-   // Create a new Validator instance
-   $validator = Validator::make($request->all(), [
-   'title' => 'required',
-   'content' => 'required',
-   ]);
-
-   // Check if validation fails
-   if ($validator->fails()) {
-   // Redirect back with errors and the input, using a named error bag
-   return back()->withErrors($validator, $bagName)->withInput();
-   }
-
-   // If validation passes, update the record
-   FeaturesOfServices::find($id)->update($request->only('title', 'content'));
-
-   return back()->with('success', "Successfully Updated");
-   }
-   public function featuresDelete($id)
-   {
-    FeaturesOfServices::findOrFail($id)->delete();
-    return back()->with('success', "Successfully Deleted");
-   }
+    public function featuresDelete($id)
+    {
+        FeaturesOfServices::findOrFail($id)->delete();
+        return back()->with('success', "Successfully Deleted");
+    }
     public function brands()
     {
-        
+
         $brands = Brand::all();
         return view('admin.layouts.dashboard.forthSection.brand', compact('brands'));
     }
@@ -441,11 +443,11 @@ class HomepageController extends Controller
     {
         return view('admin.layouts.dashboard.Service.index');
     }
-   public function taskStory()
-   {
-   $taskStory = TaskStory::first(); // only one row
-   return view('admin.layouts.dashboard.task-story.index', compact('taskStory'));
-   }
+    public function taskStory()
+    {
+        $taskStory = TaskStory::first(); // only one row
+        return view('admin.layouts.dashboard.task-story.index', compact('taskStory'));
+    }
     public function taskStoryPost(Request $request)
     {
         $request->validate([
@@ -483,65 +485,63 @@ class HomepageController extends Controller
     }
     public function blog()
     {
-       
+
         return view('admin.layouts.dashboard.Blog.index');
-
     }
-public function postBlog(Request $request)
-{
-// 1. Validate the request
-$request->validate([
-'title' => 'required|string|max:255',
-'content' => 'required|string',
-'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-'meta_title' => 'nullable|string|max:255',
-'meta_description' => 'nullable|string|max:500',
-'meta_keywords' => 'nullable|string',
-]);
+    public function postBlog(Request $request)
+    {
+        // 1. Validate the request
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string',
+        ]);
 
-// 2. Handle image upload
-$imagePath = null;
-if ($request->hasFile('image')) {
-$image = $request->file('image');
-$imageName = time() . '_' . \Str::slug($request->title) . '.' . $image->getClientOriginalExtension();
-$image->move(public_path('blogs'), $imageName);
-$imagePath = 'blogs/' . $imageName;
-}
+        // 2. Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . \Str::slug($request->title) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('blogs'), $imageName);
+            $imagePath = 'blogs/' . $imageName;
+        }
 
-// 3. Generate a unique slug
-$slug = \Str::slug($request->title);
-$count = Blog::where('slug', 'LIKE', "$slug%")->count();
-if ($count > 0) {
-$slug = $slug . '-' . ($count + 1);
-}
+        // 3. Generate a unique slug
+        $slug = \Str::slug($request->title);
+        $count = Blog::where('slug', 'LIKE', "$slug%")->count();
+        if ($count > 0) {
+            $slug = $slug . '-' . ($count + 1);
+        }
 
-// 4. Save blog post to database
-$blog = new Blog();
-$blog->title = $request->title;
-$blog->slug = $slug; // Insert slug here
-$blog->content = $request->content;
-$blog->image = $imagePath;
-$blog->meta_title = $request->meta_title;
-$blog->meta_description = $request->meta_description;
-$blog->meta_keywords = $request->meta_keywords;
-$blog->save();
+        // 4. Save blog post to database
+        $blog = new Blog();
+        $blog->title = $request->title;
+        $blog->slug = $slug; // Insert slug here
+        $blog->content = $request->content;
+        $blog->image = $imagePath;
+        $blog->meta_title = $request->meta_title;
+        $blog->meta_description = $request->meta_description;
+        $blog->meta_keywords = $request->meta_keywords;
+        $blog->save();
 
-// 5. Redirect back with success message
-return redirect()->back()->with('success', 'Blog post created successfully!');
-}
-public function blogList()
-{   
-    $blog = Blog::all();
-    return view('admin.layouts.dashboard.Blog.list',compact('blog'));
+        // 5. Redirect back with success message
+        return redirect()->back()->with('success', 'Blog post created successfully!');
+    }
+    public function blogList()
+    {
+        $blog = Blog::all();
+        return view('admin.layouts.dashboard.Blog.list', compact('blog'));
+    }
+    public function blogsEdit($id)
+    {
+        $blog = Blog::findOrFail($id);
 
-}
-public function blogsEdit($id)
-{
-    $blog = Blog::findOrFail($id);
-    
-    return view('admin.layouts.dashboard.Blog.edit',compact('blog'));
-    // return $id;
-}
+        return view('admin.layouts.dashboard.Blog.edit', compact('blog'));
+        // return $id;
+    }
     public function blogEditPost(Request $request)
     {
         $request->validate([
@@ -586,73 +586,70 @@ public function blogsEdit($id)
         return redirect()->back()->with('success', 'Blog post updated successfully!');
     }
     public function contactUsList()
-    {   
+    {
         $contactLists = ContactUs::latest()->get();
-        return view('admin.layouts.dashboard.Contact.contactUsLists',compact('contactLists'));
+        return view('admin.layouts.dashboard.Contact.contactUsLists', compact('contactLists'));
     }
     public function contactListDelete($id)
     {
         ContactUs::find($id)->delete();
-        return back()->with('success',"Successfully Deleted");
-        
+        return back()->with('success', "Successfully Deleted");
     }
     public function socialLink()
     {
         $socialLink = SocialLink::all();
-        return view('admin.layouts.dashboard.SocialLink.index',compact('socialLink'));
-
+        return view('admin.layouts.dashboard.SocialLink.index', compact('socialLink'));
     }
     public function socialLinkPost(Request $request)
     {
         $request->validate([
-            'name'=>'required',
-            'link'=>'required'
+            'name' => 'required',
+            'link' => 'required'
         ]);
         $socialLink = SocialLink::create($request->all());
-        return back()->with('success',"Successfully Created");
+        return back()->with('success', "Successfully Created");
     }
     public function SocialLinkDelete($id)
     {
-       SocialLink::find($id)->delete();
-       return back()->with('success',"Successfully Deleted");
-       
+        SocialLink::find($id)->delete();
+        return back()->with('success', "Successfully Deleted");
     }
     public function globalOperations()
     {
         $globalOperation = GlobalOperation::all();
-        return view('admin.layouts.dashboard.GlobalOperation.index',compact('globalOperation'));
+        return view('admin.layouts.dashboard.GlobalOperation.index', compact('globalOperation'));
     }
     public function globalOperationStore(Request $request)
     {
-    // Validate the request
-    $request->validate([
-    'country_name' => 'required',
-    'image' => 'nullable|image|mimes:jpg,jpeg,png,gif',
-    ]);
+        // Validate the request
+        $request->validate([
+            'country_name' => 'required',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+        ]);
 
-    // Create a new instance of GlobalOperation
-    $globalOperation = new GlobalOperation();
+        // Create a new instance of GlobalOperation
+        $globalOperation = new GlobalOperation();
 
-    // Assign values to model attributes
-    $globalOperation->country_name = $request->country_name;
+        // Assign values to model attributes
+        $globalOperation->country_name = $request->country_name;
 
-    // Handle image upload
-    if ($request->hasFile('image')) {
-    // Store the image in the globalOperation folder
-    $image = $request->file('image');
-    $imageName = time() . '.' . $image->getClientOriginalExtension();
-    $imagePath = 'globalOperation/' . $imageName; // Store in the globalOperation folder
-    $image->move(public_path('globalOperation/'), $imageName); // Move image to folder
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Store the image in the globalOperation folder
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imagePath = 'globalOperation/' . $imageName; // Store in the globalOperation folder
+            $image->move(public_path('globalOperation/'), $imageName); // Move image to folder
 
-    // Save the image path (relative to public/)
-    $globalOperation->image = $imagePath;
-    }
+            // Save the image path (relative to public/)
+            $globalOperation->image = $imagePath;
+        }
 
-    // Save the record
-    $globalOperation->save();
+        // Save the record
+        $globalOperation->save();
 
-    // Redirect with success message
-    return redirect()->back()->with('success', 'Global operation saved successfully!');
+        // Redirect with success message
+        return redirect()->back()->with('success', 'Global operation saved successfully!');
     }
     public function globalOperationDelete($id)
     {
@@ -679,7 +676,7 @@ public function blogsEdit($id)
     public function teamMember()
     {
         $teamMembers = TeamMembers::all();
-        return view('admin.layouts.dashboard.TeamMember.index',compact('teamMembers'));
+        return view('admin.layouts.dashboard.TeamMember.index', compact('teamMembers'));
     }
     public function teamMemberPost(Request $request)
     {
@@ -691,16 +688,16 @@ public function blogsEdit($id)
         ]);
 
         // Handle image upload if exists
-       if ($request->hasFile('image')) {
-       // Store the image in the globalOperation folder
-       $image = $request->file('image');
-       $imageName = time() . '.' . $image->getClientOriginalExtension();
-       $imagePath = 'TeamMembers/' . $imageName; // Store in the globalOperation folder
-       $image->move(public_path('TeamMembers/'), $imageName); // Move image to folder
+        if ($request->hasFile('image')) {
+            // Store the image in the globalOperation folder
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imagePath = 'TeamMembers/' . $imageName; // Store in the globalOperation folder
+            $image->move(public_path('TeamMembers/'), $imageName); // Move image to folder
 
-       // Save the image path (relative to public/)
-      
-       }
+            // Save the image path (relative to public/)
+
+        }
 
         // Create or update the TeamMember record
         $teamMember = TeamMembers::create([
@@ -714,24 +711,48 @@ public function blogsEdit($id)
     }
     public function teamMemberDelete($id)
     {
-         // Find the record by ID
-         $teamMembers = TeamMembers::find($id);
+        // Find the record by ID
+        $teamMembers = TeamMembers::find($id);
 
-         // Check if the record exists
-         if ($teamMembers) {
-         // Check if an image exists and delete it from the server
-         if ($teamMembers->image && file_exists(public_path($teamMembers->image))) {
-         unlink(public_path($teamMembers->image)); // Remove the image from the folder
-         }
+        // Check if the record exists
+        if ($teamMembers) {
+            // Check if an image exists and delete it from the server
+            if ($teamMembers->image && file_exists(public_path($teamMembers->image))) {
+                unlink(public_path($teamMembers->image)); // Remove the image from the folder
+            }
 
-         // Delete the record from the database
-         $teamMembers->delete();
+            // Delete the record from the database
+            $teamMembers->delete();
 
-         // Return success message
-         return redirect()->back()->with('success', 'Team Members deleted successfully!');
-         }
+            // Return success message
+            return redirect()->back()->with('success', 'Team Members deleted successfully!');
+        }
 
-         // If the record doesn't exist
-         return redirect()->back()->with('error', 'Team Members not found.');
+        // If the record doesn't exist
+        return redirect()->back()->with('error', 'Team Members not found.');
+    }
+    public function companyAddress()
+    {
+        $address = Address::first();
+        return view('admin.layouts.dashboard.Address.index',compact('address'));
+
+    }
+    public function companyAddressPost(Request $request)
+    {
+         $request = $request->validate([
+            'address'=>'required'
+        ]);
+        $address = Address::first();
+        if($address){
+            $address->update($request);
+        }else{
+            Address::create($request);
+        }
+        return back()->with('success',"Successfully Created Address");
+    }
+    public function clearAddress()
+    {
+       Address::truncate();
+       return back()->with('success',"Successfully Clear All Record");
     }
 }
