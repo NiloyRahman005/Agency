@@ -11,6 +11,7 @@ use App\Models\Content;
 use App\Models\Event;
 use App\Models\Featured_content;
 use App\Models\GlobalOperation;
+use App\Models\GlobalOperationContent;
 use App\Models\OurServices;
 use App\Models\SeconSectionCards;
 use App\Models\SectionSubTitle;
@@ -37,7 +38,9 @@ class FontendController extends Controller
         $ourServices = OurServices::all();
         $brands = Brand::all();
         $globalOperations = GlobalOperation::all();
-        return view('homepage',compact('sectionSubTitle','sectionTitle','video','content','banner','secondSection','ourServices','brands','globalOperations'));
+        $globaOperationContent = GlobalOperationContent::first();
+        return
+        view('homepage',compact('sectionSubTitle','sectionTitle','video','content','banner','secondSection','ourServices','brands','globalOperations','globaOperationContent'));
     }
     public function ourServiceDetails($name)
     {

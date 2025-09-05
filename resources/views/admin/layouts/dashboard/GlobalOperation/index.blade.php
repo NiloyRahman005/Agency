@@ -8,8 +8,8 @@
         <div class="row">
             <div class="col-6">
                 <div class="filter cm-content-box box-primary">
-                    <div class="content-title">
-                        <div class="cpa">
+                    <div class="content-title bg-primary">
+                        <div class="cpa text-light">
                             Featured Image
                         </div>
                         <div class="tools">
@@ -57,6 +57,37 @@
                                 </form>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h3 class="text-light">Global Operation</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('admin.globalOpeartionPost') }}" method="POST">
+                            @csrf
+
+                            <div class="mb-3">
+                                <label for="" class="form-label">Title</label>
+                                <input type="text" name="title" class="form-control"
+                                    value="{{ $globalOperationContent->title ?? ' ' }}">
+                                @error('title')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="" class="form-label">Content</label>
+                                <textarea name="content" id="" cols="30" rows="10" class="form-control">{{ $globalOperationContent->content ?? ' ' }}</textarea>
+                                @error('content')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <button class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

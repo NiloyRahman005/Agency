@@ -11,6 +11,7 @@ use App\Models\ContactUs;
 use App\Models\Content;
 use App\Models\FeaturesOfServices;
 use App\Models\GlobalOperation;
+use App\Models\GlobalOperationContent;
 use App\Models\Logo;
 use App\Models\SocialLink;
 use App\Models\OurServices;
@@ -617,7 +618,9 @@ class HomepageController extends Controller
     public function globalOperations()
     {
         $globalOperation = GlobalOperation::all();
-        return view('admin.layouts.dashboard.GlobalOperation.index', compact('globalOperation'));
+        $globalOperationContent = GlobalOperationContent::first();
+        return view('admin.layouts.dashboard.GlobalOperation.index',
+        compact('globalOperation','globalOperationContent'));
     }
     public function globalOperationStore(Request $request)
     {
@@ -754,5 +757,20 @@ class HomepageController extends Controller
     {
        Address::truncate();
        return back()->with('success',"Successfully Clear All Record");
+    }
+    public function globalOpeartionPost(Request $request)
+    {
+        $request = $request->validate([
+            'title'=>'required',
+            'content'=>'required'
+        ]);
+      $globalOperation =  GlobalOperationContent::first();
+      if($globalOperation)
+        {
+        $globalOperation->update($request);
+      }else{
+        GlobalOperationContent::create($request);
+      }
+      return back()->with('success',"Successfully Created");
     }
 }

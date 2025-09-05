@@ -176,11 +176,12 @@
                             <div class="col-lg-6 col-md-12 text-section">
                                 <div class="content-wrapper">
                                     <p class="subtitle text-uppercase mb-3">WE HAVE</p>
-                                    <h1 class="main-title mb-4">Global operations</h1>
+                                    <h1 class="main-title mb-4">
+                                        {{ $globaOperationContent->title ?? '' }}
+
+                                    </h1>
                                     <p class="description mb-4">
-                                        NEXT Group is a team of 450 people from diverse backgrounds,
-                                        operating from 5 different countries, including UAE, Malaysia,
-                                        Bangladesh, Sri Lanka & Cyprus.
+                                        {{ $globaOperationContent->content ?? '' }}
                                     </p>
                                 </div>
                             </div>

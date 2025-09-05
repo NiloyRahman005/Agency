@@ -119,6 +119,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     
     Route::get('/SocialLinkDelete/{id}',[\App\Http\Controllers\Admin\HomepageController::class,'SocialLinkDelete'])->name('SocialLinkDelete');
 
+    
+
+    Route::post('/globalOpeartionPost',[\App\Http\Controllers\Admin\HomepageController::class,'globalOpeartionPost'])->name('globalOpeartionPost');
+
     Route::get('/globalOperations',[\App\Http\Controllers\Admin\HomepageController::class,'globalOperations'])->name('globalOperations');
 
     Route::post('/globalOperationStore',[\App\Http\Controllers\Admin\HomepageController::class,'globalOperationStore'])->name('globalOperationStore');

@@ -998,6 +998,7 @@
                         <ul aria-expanded="false">
                             <li><a href="{{ route('admin.globalOperations') }}">Lists</a></li>
                         </ul>
+
                     </li>
 
                     <li>

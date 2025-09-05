@@ -35,7 +35,7 @@
             <div class="swiper-wrapper">
                 @foreach ($teamMembers as $member)
                     <div class="swiper-slide team__slide">
-                        <a href="#">
+                        <a href="">
                             <!-- Dynamically set the image from the team member data -->
                             <img src="{{ asset($member->image) }}" alt="Team Member">
                             <div class="team__info">
