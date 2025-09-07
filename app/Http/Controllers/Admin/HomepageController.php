@@ -18,6 +18,7 @@ use App\Models\OurServices;
 use App\Models\SeconSectionCards;
 use App\Models\SectionSubTitle;
 use App\Models\SectionTitle;
+use App\Models\Seo;
 use App\Models\TaskStory;
 use App\Models\TeamMembers;
 use App\Models\Video;
@@ -619,8 +620,10 @@ class HomepageController extends Controller
     {
         $globalOperation = GlobalOperation::all();
         $globalOperationContent = GlobalOperationContent::first();
-        return view('admin.layouts.dashboard.GlobalOperation.index',
-        compact('globalOperation','globalOperationContent'));
+        return view(
+            'admin.layouts.dashboard.GlobalOperation.index',
+            compact('globalOperation', 'globalOperationContent')
+        );
     }
     public function globalOperationStore(Request $request)
     {
@@ -737,40 +740,103 @@ class HomepageController extends Controller
     public function companyAddress()
     {
         $address = Address::first();
-        return view('admin.layouts.dashboard.Address.index',compact('address'));
-
+        return view('admin.layouts.dashboard.Address.index', compact('address'));
     }
     public function companyAddressPost(Request $request)
     {
-         $request = $request->validate([
-            'address'=>'required'
+        $request = $request->validate([
+            'address' => 'required'
         ]);
         $address = Address::first();
-        if($address){
+        if ($address) {
             $address->update($request);
-        }else{
+        } else {
             Address::create($request);
         }
-        return back()->with('success',"Successfully Created Address");
+        return back()->with('success', "Successfully Created Address");
     }
     public function clearAddress()
     {
-       Address::truncate();
-       return back()->with('success',"Successfully Clear All Record");
+        Address::truncate();
+        return back()->with('success', "Successfully Clear All Record");
     }
     public function globalOpeartionPost(Request $request)
     {
         $request = $request->validate([
-            'title'=>'required',
-            'content'=>'required'
+            'title' => 'required',
+            'content' => 'required'
         ]);
-      $globalOperation =  GlobalOperationContent::first();
-      if($globalOperation)
-        {
-        $globalOperation->update($request);
-      }else{
-        GlobalOperationContent::create($request);
-      }
-      return back()->with('success',"Successfully Created");
+        $globalOperation =  GlobalOperationContent::first();
+        if ($globalOperation) {
+            $globalOperation->update($request);
+        } else {
+            GlobalOperationContent::create($request);
+        }
+        return back()->with('success', "Successfully Created");
+    }
+    public function addSeo()
+    {
+        $seo = Seo::first();
+        return view('admin.layouts.dashboard.Seo.index',compact('seo'));
+    }
+    public function seoPost(Request $request)
+    {
+       
+       // Validate incoming data
+       $request->validate([
+       'title' => 'required|string|max:255',
+       'content' => 'required|string',
+       'description' => 'required|string',
+       'meta_keywords' => 'required|string',
+       'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+       'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+       ]);
+
+       // Check if SEO row already exists (assuming only one row is needed)
+       $seo = Seo::first();
+
+       if (!$seo) {
+       $seo = new Seo();
+       }
+
+       $seo->title = $request->title;
+       $seo->content = $request->content;
+       $seo->description = $request->description;
+       $seo->meta_keywords = $request->meta_keywords;
+
+       // Handle featured/OG image upload
+       if ($request->hasFile('image')) {
+       $image = $request->file('image');
+
+       $path = public_path('seo');
+       if (!File::exists($path)) {
+       File::makeDirectory($path, 0777, true, true);
+       }
+
+       $imageName = time() . '_' . $image->getClientOriginalName();
+       $image->move($path, $imageName);
+
+       $seo->image = 'seo/' . $imageName;
+       }
+
+       // ✅ Handle icon upload
+       if ($request->hasFile('icon')) {
+       $icon = $request->file('icon');
+
+       $path = public_path('seo/icons');
+       if (!File::exists($path)) {
+       File::makeDirectory($path, 0777, true, true);
+       }
+
+       $iconName = time() . '_icon_' . $icon->getClientOriginalName();
+       $icon->move($path, $iconName);
+
+       $seo->icon = 'seo/icons/' . $iconName;
+       }
+
+       $seo->save();
+
+       return back()->with('success', "Successfully Created");
+
     }
 }

@@ -141,6 +141,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     Route::get('/clearAddress',[\App\Http\Controllers\Admin\HomepageController::class,'clearAddress'])->name('clearAddress');
 
+    Route::get('/addSeo',[\App\Http\Controllers\Admin\HomepageController::class,'addSeo'])->name('addSeo');
+    Route::post('/seoPost',[\App\Http\Controllers\Admin\HomepageController::class,'seoPost'])->name('seoPost');
+
+
+
     
   
 

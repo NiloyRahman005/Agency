@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<?php
+$seo = App\Models\Seo::first();
+
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,28 +16,29 @@
     <title>{{ $seo['title'] ?? '' }} @yield('title')</title>
     <meta name="title" content="{{ $seo['title'] ?? '' }}">
     <meta name="description" content="{{ $seo['description'] ?? '' }}">
-    <meta name="keywords" content="{{ $seo['keywords'] ?? '' }}">
+    <meta name="keywords" content="{{ $seo['meta_keywords'] ?? '' }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset($seo['icon'] ?? '') }}">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ $seo['url'] ?? url()->current() }}">
     <meta property="og:title" content="{{ $seo['title'] ?? '' }}">
     <meta property="og:description" content="{{ $seo['description'] ?? '' }}">
-    <meta property="og:image" content="{{ $seo['image'] ?? asset('assets/imgs/logo/favicon.png') }}">
-    <meta property="og:site_name" content="{{ config('app.name') }}">
+    <meta property="og:image" content="{{ asset($seo['image']) ?? asset('assets/imgs/logo/favicon.png') }}">
+    <meta property="og:site_name" content="{{ $seo['title'] ?? '' }}">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ $seo['url'] ?? url()->current() }}">
     <meta name="twitter:title" content="{{ $seo['title'] ?? '' }}">
     <meta name="twitter:description" content="{{ $seo['description'] ?? '' }}">
-    <meta name="twitter:image" content="{{ $seo['image'] ?? asset('assets/imgs/logo/favicon.png') }}">
+    <meta name="twitter:image" content="{{ asset($seo['image']) ?? asset('assets/imgs/logo/favicon.png') }}">
 
     <link rel="canonical" href="{{ $seo['url'] ?? url()->current() }}">
 
-    <title>Ta-ASK</title>
+
     <!-- Fav Icon -->
-    <link rel="icon" type="image/x-icon" href="assets/imgs/logo/favicon.png">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
